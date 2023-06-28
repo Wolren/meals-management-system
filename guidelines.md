@@ -1,6 +1,3 @@
-# Guidelines
----
-
 ## Programming Style
 
 For programming in Java we use [google style](https://google.github.io/styleguide/javaguide.html) 
