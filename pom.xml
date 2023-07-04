@@ -41,6 +41,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency> <!--Connect to MySQL Server-->
+    		<groupId>com.microsoft.sqlserver</groupId>
+    		<artifactId>mssql-jdbc</artifactId>
+    		<version>8.2.1.jre11</version>
+		</dependency>
 	</dependencies>
 
 	<build>
