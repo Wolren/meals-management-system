@@ -23,7 +23,7 @@ public class MysqlConnection {
             connection.close ();
         }
         catch (Exception exception) {
-            System.out.println ("An error has ouccured.");
+            System.out.println ("An error has occured.");
             System.out.println (exception);
         }
     }
