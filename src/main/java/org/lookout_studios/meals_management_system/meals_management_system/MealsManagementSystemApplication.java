@@ -16,7 +16,7 @@ public class MealsManagementSystemApplication {
 		 * For tests only. 
 		 * TO-DO: Change to desired location when the app logic will be ready. 
 		 */
-		MysqlConnection mysqlConnectionObject = new MysqlConnection();
-		mysqlConnectionObject.sqlConnection();
+		MysqlConnection mysqlConnectionObject = new MysqlConnection ();
+		mysqlConnectionObject.sqlConnection ();
 	}
 }
