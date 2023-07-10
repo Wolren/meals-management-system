@@ -1,0 +1,28 @@
+package org.lookout_studios.meals_management_system.meals_management_system;
+
+import org.json.JSONObject;
+
+/*
+ * This class easily generate JSON responses and return them in requests
+ */
+public class JsonResponse {
+    private JSONObject responseJson;
+
+    public JsonResponse(Object... keyValuePairs) {
+        responseJson = new JSONObject();
+        for (int i = 0; i < keyValuePairs.length; i += 2) {
+            String key = String.valueOf(keyValuePairs[i]);
+            Object value = keyValuePairs[i + 1];
+            responseJson.put(key, value);
+        }
+    }
+
+    
+    /** 
+     * @return String as a JSON 
+     */
+    public String getResponse() {
+        return responseJson.toString();
+    }
+}
+
