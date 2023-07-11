@@ -16,21 +16,21 @@ CREATE TABLE `fridges` (
     FOREIGN KEY (userId) REFERENCES users(userId)
 );
 
-CREATE TABLE `MeasurmentUnits` (
+CREATE TABLE `measurmentUnits` (
   `measurmentUnitId` INT AUTO_INCREMENT NOT NULL,
   `measurmentUnitName` varchar(50) NOT NULL,
   PRIMARY KEY (`measurmentUnitId`)
 );
 
-CREATE TABLE `ProductType` (
+CREATE TABLE `productType` (
   `productTypeId` INT AUTO_INCREMENT NOT NULL,
   `productTypeName` varchar(50) NOT NULL,
   `measurmentUnitId` INT,
-  PRIMARY KEY (`productTypeId`)
-  FOREIGN KEY (measurmentUnitId) REFERENCES MeasurmentUnits(measurmentUnitId)
+  PRIMARY KEY (`productTypeId`),
+  FOREIGN KEY (measurmentUnitId) REFERENCES measurmentUnits(measurmentUnitId)
 );
 
-CREATE TABLE `ProductInstance`(
+CREATE TABLE `productInstance`(
     `instanceId` INT AUTO_INCREMENT NOT NULL,
     `productName` varchar(100) NOT NULL,
     `fridgeId` INT NOT NULL,
@@ -41,5 +41,5 @@ CREATE TABLE `ProductInstance`(
     `barcode` varchar(13),
     PRIMARY KEY (`instanceId`),
     FOREIGN KEY (fridgeId) REFERENCES fridges(fridgeId),
-    FOREIGN KEY (productTypeId) REFERENCES ProductType(productTypeId)
+    FOREIGN KEY (productTypeId) REFERENCES productType(productTypeId)
 );
