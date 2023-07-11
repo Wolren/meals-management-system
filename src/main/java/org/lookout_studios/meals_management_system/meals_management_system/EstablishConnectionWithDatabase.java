@@ -11,9 +11,10 @@ class accessData {
     static String connectionInstanceName = "com.mysql.cj.jdbc.Driver";
 }
 class databaseData {
-    static String fridges = "select fridgeId, userId from fridges";
-    static String productInstance = "select ProductTypeId, productName, fridgeId, expirationDate, entryDate, measurementUnitName, Amount from productinstance";
-    static String users = "select email, password, userId from users";
+    static String fridges = "select * from fridges";
+    static String productInstance = "select * from productinstance";
+    static String users = "select * from users";
+    static String MeasurementUnits = "select * from MeasurementUnits";
 }
 /**
  * Class establishing connection with database.
@@ -40,13 +41,15 @@ public class EstablishConnectionWithDatabase {
             while(storeTableDataSet.next ()) {
                 /* Insert operations here. */
             }
-            executeSqlStatement = accessConnection.createStatement ();
             storeTableDataSet = executeSqlStatement.executeQuery (databaseData.productInstance);
             while(storeTableDataSet.next ()) {
                 /* Insert operations here. */
             }
-            executeSqlStatement = accessConnection.createStatement ();
             storeTableDataSet = executeSqlStatement.executeQuery (databaseData.users);
+            while(storeTableDataSet.next ()) {
+                /* Insert operations here. */
+            }
+            storeTableDataSet = executeSqlStatement.executeQuery (databaseData.MeasurementUnits);
             while(storeTableDataSet.next ()) {
                 /* Insert operations here. */
             }
