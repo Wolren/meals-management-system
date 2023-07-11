@@ -1,7 +1,5 @@
 package org.lookout_studios.meals_management_system.meals_management_system;
 
-import org.apache.catalina.connector.Response;
-import org.apache.logging.log4j.status.StatusLogger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
