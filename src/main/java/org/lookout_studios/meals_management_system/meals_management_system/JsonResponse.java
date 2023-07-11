@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /*
- * This class easily generate JSON responses and return them in requests
+ * This class can be used to generate JSON API responses
  */
 public class JsonResponse {
     private JSONObject responseJson;
@@ -19,14 +19,14 @@ public class JsonResponse {
     }
 
     /**
-     * @return JSON as string
+     * @return JSON response as string
      */
     public String getResponse() {
         return responseJson.toString();
     }
 
     /**
-     * Adds a single property to the JSON object.
+     * Adds a single property to the JSON object
      * 
      * @param key   Key of the JSON property
      * @param value Value of the JSON property
