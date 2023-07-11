@@ -8,6 +8,8 @@ class MealsManagementSystemApplicationTests {
 
 	@Test
 	void contextLoads() {
+		EstablishConnectionWithDatabase mysqlConnectionObject = new EstablishConnectionWithDatabase () ;
+		mysqlConnectionObject.createSqlConnection ();
 	}
 
 }

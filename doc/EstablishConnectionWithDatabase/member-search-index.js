@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"org.lookout_studios.meals_management_system.meals_management_system","c":"EstablishConnectionWithDatabase","l":"createSqlConnection()"},{"p":"org.lookout_studios.meals_management_system.meals_management_system","c":"EstablishConnectionWithDatabase","l":"EstablishConnectionWithDatabase()","u":"%3Cinit%3E()"}];updateSearchResults();

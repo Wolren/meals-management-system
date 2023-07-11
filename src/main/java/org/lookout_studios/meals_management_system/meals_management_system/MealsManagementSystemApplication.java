@@ -12,11 +12,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 public class MealsManagementSystemApplication {
 	public static void main (String[] args) {
 		SpringApplication.run (MealsManagementSystemApplication.class, args);
-		/* 
-		 * For tests only. 
-		 * TO-DO: Change to desired location when the app logic will be ready. 
-		 */
-		MysqlConnection mysqlConnectionObject = new MysqlConnection ();
-		mysqlConnectionObject.sqlConnection ();
+		EstablishConnectionWithDatabase connectionWithDatabaseFileReference = new EstablishConnectionWithDatabase () ;
+		connectionWithDatabaseFileReference.createSqlConnection ();
 	}
 }
