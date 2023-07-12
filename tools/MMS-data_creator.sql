@@ -6,6 +6,8 @@ CREATE TABLE `users` (
   `email` varchar(50) NOT NULL,
   `password` varchar(30) NOT NULL,
   `userId` INT AUTO_INCREMENT NOT NULL,
+  `isVerified` boolean NOT NULL,
+  `registrationToken` varchar(30) NOT NULL
   PRIMARY KEY (`userId`)
 );
 

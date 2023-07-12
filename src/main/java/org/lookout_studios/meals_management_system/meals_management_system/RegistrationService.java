@@ -16,7 +16,9 @@ public class RegistrationService {
         if (!emailCheck(user.getEmail())) {
             throw new InvalidEmailException();
         }
-        // TO-DO: send email
+        String registrationToken = user.generateRegistrationToken();
+        user.register();
+        // TO-DO: Send email with registration link containting the token
         return ResponseEntity.ok().build();
     }
 
