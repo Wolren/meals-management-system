@@ -1,6 +1,5 @@
 package org.lookout_studios.meals_management_system.meals_management_system;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /*
@@ -14,16 +13,23 @@ public class JsonResponse {
         for (int i = 0; i < keyValuePairs.length; i += 2) {
             String key = String.valueOf(keyValuePairs[i]);
             Object value = keyValuePairs[i + 1];
-            this.addProperty(key, value);
+            responseJson.put(key, value);
         }
     }
 
+<<<<<<< HEAD
     /**
      * @return JSON response as string
+=======
+    
+    /** 
+     * @return String as a JSON 
+>>>>>>> parent of d57f3bc ([19] implement JSON responses and HTTP statuses)
      */
     public String getResponse() {
         return responseJson.toString();
     }
+<<<<<<< HEAD
 
     /**
      * Adds a single property to the JSON object
@@ -48,4 +54,7 @@ public class JsonResponse {
         this.addProperty("message", status.getStatusName());
         this.addProperty("status", status.getCode());
     }
+=======
+>>>>>>> parent of d57f3bc ([19] implement JSON responses and HTTP statuses)
 }
+

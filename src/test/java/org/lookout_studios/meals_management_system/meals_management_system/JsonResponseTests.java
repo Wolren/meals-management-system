@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class JsonResponseTests {
 
     @Test
-    public void JsonResponse() {
+    public void testJsonResponse() {
         // Creating a JSON response
         JsonResponse response = new JsonResponse("status", "success", "message", "Operation completed successfully");
 
@@ -19,22 +19,6 @@ public class JsonResponseTests {
         // Asserting the expected and actual JSON responses
         Assertions.assertEquals(expectedJsonResponse, jsonResponse, "The JSON response is not as expected");
     }
-
-    @Test
-    public void okRequestStatusIntegration() {
-        String expectedResponse = """
-                {"message":"OK","status":"200"}""";
-        JsonResponse response = new JsonResponse();
-        response.addStatus(ResponseStatus.OK);
-        Assertions.assertEquals(expectedResponse, response.getResponse());
-    }
-
-    @Test
-    public void badRequestStatusIntegration() {
-        String expectedResponse = """
-                {"message":"Bad Request","status":"400"}""";
-        JsonResponse response = new JsonResponse();
-        response.addStatus(ResponseStatus.BAD_REQUEST);
-        Assertions.assertEquals(expectedResponse, response.getResponse());
-    }
 }
+
+

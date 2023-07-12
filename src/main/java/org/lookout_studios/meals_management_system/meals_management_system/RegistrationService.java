@@ -11,14 +11,14 @@ public class RegistrationService {
      * This method handles registration requests and sends confirmation emails.
      */
     @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
-    public JsonResponse registerUser(@RequestBody User user) throws Exception {
+    public String registerUser(@RequestBody User user) {
         if (!emailCheck(user.getEmail())) {
-            ResponseStatus status = ResponseStatus.BAD_REQUEST;
-            return new JsonResponse(status, status.getCode());
+            // TO-DO: Return a nice JSON
+            return "Invalid email address";
         }
         // TO-DO: Send an email with confirmation link
-        ResponseStatus status = ResponseStatus.OK;
-        return new JsonResponse(status);
+        // TO-DO: Return a nice JSON
+        return "200";
     }
 
     /*
