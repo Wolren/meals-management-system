@@ -1,5 +1,6 @@
 package org.lookout_studios.meals_management_system.meals_management_system;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,14 +12,12 @@ public class RegistrationService {
      * This method handles registration requests and sends confirmation emails.
      */
     @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
-    public String registerUser(@RequestBody User user) {
+    public ResponseEntity registerUser(@RequestBody User user) throws InvalidEmailException {
         if (!emailCheck(user.getEmail())) {
-            // TO-DO: Return a nice JSON
-            return "Invalid email address";
+            throw new InvalidEmailException();
         }
-        // TO-DO: Send an email with confirmation link
-        // TO-DO: Return a nice JSON
-        return "200";
+        // TO-DO: send email
+        return ResponseEntity.ok().build();
     }
 
     /*
