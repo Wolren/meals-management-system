@@ -33,8 +33,7 @@ public class User {
     /**
      * Puts contents of the User object into the database
      */
-    public void registerInDatabase() {
-        generateRegistrationToken();
+    public void register() {
         // TO-DO: Put the token and other properties in the database
         throw new UnsupportedOperationException("Not implemented");
     }

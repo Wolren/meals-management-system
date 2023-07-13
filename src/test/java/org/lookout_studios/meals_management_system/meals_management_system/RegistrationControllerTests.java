@@ -27,8 +27,8 @@ class RegistrationControllerTests {
     }
 
     @Test
-    public void validEmailCheck() {
-        RegistrationController registrationController = new RegistrationController();
+    void validEmailCheck() {
+        RegistrationService registrationController = new RegistrationService();
         assertTrue(registrationController.emailCheck("example@gmail.com"));
         assertTrue(registrationController.emailCheck("example1234@gmail.com"));
         assertTrue(registrationController.emailCheck("abc-d@mail.com"));
@@ -39,8 +39,8 @@ class RegistrationControllerTests {
     }
 
     @Test
-    public void invalidEmailCheck() {
-        RegistrationController registrationController = new RegistrationController();
+    void invalidEmailCheck() {
+        RegistrationService registrationController = new RegistrationService();
         assertFalse(registrationController.emailCheck("abc-@mail.com"));
         assertFalse(registrationController.emailCheck("abc..def@mail.com"));
         assertFalse(registrationController.emailCheck("abc#def@mail.com"));
