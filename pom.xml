@@ -46,8 +46,27 @@
 	    		<artifactId>mssql-jdbc</artifactId>
 	    		<version>8.2.1.jre11</version>
 		</dependency>
+		<!--TO DO: Remove comment or delete whole section if useless-->
+		<!--Mock Database-->
+<!--	<dependency> 
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>5.9.3</version>
+				<type>pom</type>
+				<scope>import</scope>
+		</dependency>
+		<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<scope>test</scope>
+		</dependency> -->
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>

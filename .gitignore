@@ -1,3 +1,5 @@
+# Configuration file
+*.config
 # Compiled class file
 *.class
 
