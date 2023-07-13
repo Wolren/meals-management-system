@@ -1,5 +1,7 @@
+# TO-DO: After creating configuration file enable this option.
 # Configuration file
-*.config
+# *.config 
+
 # Compiled class file
 *.class
 
