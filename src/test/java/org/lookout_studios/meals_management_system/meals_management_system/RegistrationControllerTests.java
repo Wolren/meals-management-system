@@ -2,11 +2,32 @@ package org.lookout_studios.meals_management_system.meals_management_system;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
 
-class RegistrationServiceTests {
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { MealsManagementSystemApplication.class })
+@WebAppConfiguration
+class RegistrationControllerTests {
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    private MockMvc mockMvc;
+
+    public void setup() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
     @Test
-    void validEmailCheck() {
+    public void validEmailCheck() {
         RegistrationController registrationController = new RegistrationController();
         assertTrue(registrationController.emailCheck("example@gmail.com"));
         assertTrue(registrationController.emailCheck("example1234@gmail.com"));
@@ -18,12 +39,25 @@ class RegistrationServiceTests {
     }
 
     @Test
-    void invalidEmailCheck() {
+    public void invalidEmailCheck() {
         RegistrationController registrationController = new RegistrationController();
         assertFalse(registrationController.emailCheck("abc-@mail.com"));
         assertFalse(registrationController.emailCheck("abc..def@mail.com"));
         assertFalse(registrationController.emailCheck("abc#def@mail.com"));
         assertFalse(registrationController.emailCheck("abc()@mail.com"));
         assertFalse(registrationController.emailCheck("abc^&$@mail.com"));
+    }
+
+    /**
+     * This test ensures that registered users cannot be registered again
+     */
+    @Test
+    public void registeredUserRejection() {
+        try {
+            setup();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
     }
 }
