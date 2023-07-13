@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class RegistrationService {
+public class RegistrationController {
 
-    /*
+    /**
      * This method handles registration requests and sends confirmation emails.
      */
     @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
@@ -16,10 +16,11 @@ public class RegistrationService {
         if (!emailCheck(user.getEmail())) {
             throw new InvalidEmailException();
         }
-        String registrationToken = user.generateRegistrationToken();
-        user.register();
-        // TO-DO: Send email with registration link containting the token
-        return ResponseEntity.ok().build();
+        user.registerInDatabase();
+        new EmailSender().sendRegistrationEmail(user);
+
+        JsonResponse response = new JsonResponse("status", 200);
+        return ResponseEntity.ok(response.toString());
     }
 
     /*
@@ -28,5 +29,4 @@ public class RegistrationService {
     public boolean emailCheck(String email) {
         throw new UnsupportedOperationException("Not implemented");
     }
-
 }

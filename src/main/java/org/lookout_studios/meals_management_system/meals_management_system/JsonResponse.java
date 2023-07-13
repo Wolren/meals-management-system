@@ -20,7 +20,7 @@ public class JsonResponse {
     /**
      * @return JSON response as string
      */
-    public String getResponse() {
+    public String toString() {
         return responseJson.toString();
     }
 }

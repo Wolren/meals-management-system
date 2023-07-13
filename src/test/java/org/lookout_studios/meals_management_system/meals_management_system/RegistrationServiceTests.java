@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceTests {
     @Test
     void validEmailCheck() {
-        RegistrationService registrationController = new RegistrationService();
+        RegistrationController registrationController = new RegistrationController();
         assertTrue(registrationController.emailCheck("example@gmail.com"));
         assertTrue(registrationController.emailCheck("example1234@gmail.com"));
         assertTrue(registrationController.emailCheck("abc-d@mail.com"));
@@ -19,7 +19,7 @@ class RegistrationServiceTests {
 
     @Test
     void invalidEmailCheck() {
-        RegistrationService registrationController = new RegistrationService();
+        RegistrationController registrationController = new RegistrationController();
         assertFalse(registrationController.emailCheck("abc-@mail.com"));
         assertFalse(registrationController.emailCheck("abc..def@mail.com"));
         assertFalse(registrationController.emailCheck("abc#def@mail.com"));

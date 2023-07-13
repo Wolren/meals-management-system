@@ -11,7 +11,7 @@ public class JsonResponseTests {
         JsonResponse response = new JsonResponse("status", "success", "message", "Operation completed successfully");
 
         // Getting the JSON response
-        String jsonResponse = response.getResponse();
+        String jsonResponse = response.toString();
 
         // Expected JSON response
         String expectedJsonResponse = "{\"message\":\"Operation completed successfully\",\"status\":\"success\"}";
@@ -20,5 +20,3 @@ public class JsonResponseTests {
         Assertions.assertEquals(expectedJsonResponse, jsonResponse, "The JSON response is not as expected");
     }
 }
-
-
