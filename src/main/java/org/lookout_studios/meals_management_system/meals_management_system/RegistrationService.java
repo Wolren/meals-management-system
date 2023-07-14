@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 public class RegistrationService {
@@ -26,7 +28,10 @@ public class RegistrationService {
      * This method checks whether an email address has a correct format
      */
     public boolean emailCheck(String email) {
-        throw new UnsupportedOperationException("Not implemented");
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
+        Matcher matcher = pattern.matcher(email);
+        boolean answer = matcher.find();
+        return answer;
     }
 
 }
