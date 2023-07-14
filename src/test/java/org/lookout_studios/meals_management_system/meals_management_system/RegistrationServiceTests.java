@@ -7,23 +7,23 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceTests {
     @Test
     void validEmailCheck() {
-        RegistrationController registrationController = new RegistrationController();
-        assertTrue(registrationController.emailCheck("example@gmail.com"));
-        assertTrue(registrationController.emailCheck("example1234@gmail.com"));
-        assertTrue(registrationController.emailCheck("abc-d@mail.com"));
-        assertTrue(registrationController.emailCheck("abc.def@mail.com"));
-        assertTrue(registrationController.emailCheck("abc@mail.com"));
-        assertTrue(registrationController.emailCheck("abc-def@mail.com"));
-        assertTrue(registrationController.emailCheck("abc123@mail.com"));
+        RegistrationService registrationService = new RegistrationService();
+        assertTrue(registrationService.emailCheck("example@gmail.com"));
+        assertTrue(registrationService.emailCheck("example1234@gmail.com"));
+        assertTrue(registrationService.emailCheck("abc-d@mail.com"));
+        assertTrue(registrationService.emailCheck("abc.def@mail.com"));
+        assertTrue(registrationService.emailCheck("abc@mail.com"));
+        assertTrue(registrationService.emailCheck("abc-def@mail.com"));
+        assertTrue(registrationService.emailCheck("abc123@mail.com"));
     }
 
     @Test
     void invalidEmailCheck() {
-        RegistrationController registrationController = new RegistrationController();
-        assertFalse(registrationController.emailCheck("abc-@mail.com"));
-        assertFalse(registrationController.emailCheck("abc..def@mail.com"));
-        assertFalse(registrationController.emailCheck("abc#def@mail.com"));
-        assertFalse(registrationController.emailCheck("abc()@mail.com"));
-        assertFalse(registrationController.emailCheck("abc^&$@mail.com"));
+        RegistrationService registrationService = new RegistrationService();
+        assertFalse(registrationService.emailCheck("abc-@mail.com"));
+        assertFalse(registrationService.emailCheck("abc..def@mail.com"));
+        assertFalse(registrationService.emailCheck("abc#def@mail.com"));
+        assertFalse(registrationService.emailCheck("abc()@mail.com"));
+        assertFalse(registrationService.emailCheck("abc^&$@mail.com"));
     }
 }
