@@ -1,33 +1,35 @@
 package org.lookout_studios.meals_management_system.meals_management_system;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-/* TO-DO: Mock the behavior of database. Only connection with asserts. */
-class accessData {
-    static String url = "jdbc:mysql://localhost:3306/test_mms_database";
-    static String username = "root";
-    static String password = "";
-    static String connectionInstanceName = "com.mysql.cj.jdbc.Driver";
-}
-/**
- * Class establishing connection with database.
- * 
- * @author Hubert Borysowski  
- */
+import java.sql.Statement;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+ 
 public class EstablishConnectionWithDatabaseTest {
-    /**
-     * 
-     * The method connects with database using database url and admin credentials.
-     */
-    public void createSqlConnection () {
-        Connection accessConnection;
-        try {
-            Class.forName (accessData.connectionInstanceName);
-            accessConnection = DriverManager.getConnection (accessData.url, accessData.username, accessData.password);
-            accessConnection.close ();
-        }
-        catch (Exception error) {
-            System.out.println (error);
-        }
+ 
+  @InjectMocks private EstablishConnectionWithDatabase dbConnectionMock;
+  @Mock private Connection mockConnection;
+  @Mock private Statement mockStatement;
+ 
+  @Before
+  public void setUp() {
+    MockitoAnnotations.openMocks(this);
+  }
+ 
+  @Test
+  public void testMockDBConnection() {
+    try {
+      Mockito.when(mockConnection.createStatement()).thenReturn(mockStatement);
+      Mockito.when(mockConnection.createStatement().executeUpdate(Mockito.any())).thenReturn(1);
+      Mockito.verify(mockConnection.createStatement(), Mockito.times(1));
     }
+    catch (Exception mysqlError) {
+      System.out.println(mysqlError);
+    }
+  }
 }

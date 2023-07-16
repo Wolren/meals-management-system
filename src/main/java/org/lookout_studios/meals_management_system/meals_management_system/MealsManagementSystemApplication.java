@@ -12,7 +12,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 public class MealsManagementSystemApplication {
 	public static void main (String[] args) {
 		SpringApplication.run (MealsManagementSystemApplication.class, args);
-		EstablishConnectionWithDatabase connectionWithDatabaseFileReference = new EstablishConnectionWithDatabase () ;
+		EstablishConnectionWithDatabase 
+			connectionWithDatabaseFileReference = new EstablishConnectionWithDatabase () ;
 		connectionWithDatabaseFileReference.createSqlConnection ();
 	}
 }

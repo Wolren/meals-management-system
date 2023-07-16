@@ -46,9 +46,8 @@
 	    		<artifactId>mssql-jdbc</artifactId>
 	    		<version>8.2.1.jre11</version>
 		</dependency>
-		<!--TO DO: Remove comment or delete whole section if useless-->
 		<!--Mock Database-->
-<!--	<dependency> 
+		<dependency> 
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>5.4.0</version>
@@ -65,7 +64,7 @@
 				<groupId>org.junit.jupiter</groupId>
 				<artifactId>junit-jupiter</artifactId>
 				<scope>test</scope>
-		</dependency> -->
+		</dependency>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>

@@ -4,9 +4,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-
 import java.io.FileReader;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -28,15 +27,17 @@ public class EstablishConnectionWithDatabase {
         Connection accessConnection;
         try {
             /* Read configuration data from JSON file. */
-            FileReader jsonFileDataReader = new FileReader(".config\\establishConnectionWithDatabaseConfig.json");
+            FileReader jsonFileDataReader = new FileReader
+                (".config\\establishConnectionWithDatabaseConfig.json");
             Object saveParsedData = jsonParser.parse(jsonFileDataReader);
             JSONObject saveJsonData = (JSONObject)saveParsedData;
-            String databaseJdbcUrl = (String) saveJsonData.get("databaseJdbcUrl");
+            String databaseJdbcUrl = (String) saveJsonData.get("databaseJdbcUrl"); /* Naming comes from JSON variables. */
             String databaseUsername = (String) saveJsonData.get("databaseUsername");
             String databasePassword = (String) saveJsonData.get("databasePassword");
             /* Establish MySQL connection. */
             Class.forName (connectionInstanceName);
-            accessConnection = DriverManager.getConnection (databaseJdbcUrl, databaseUsername, databasePassword);
+            accessConnection = DriverManager.getConnection 
+                (databaseJdbcUrl, databaseUsername, databasePassword);
             accessConnection.close ();
         }
         catch (FileNotFoundException fileNotFoundError)
@@ -47,8 +48,8 @@ public class EstablishConnectionWithDatabase {
         {
             System.out.println(ioError);
         }
-        catch (Exception error) {
-            System.out.println (error);
+        catch (Exception mysqlError) {
+            System.out.println (mysqlError);
         }
     }
 }
