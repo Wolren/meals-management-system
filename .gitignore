@@ -1,6 +1,6 @@
-# TO-DO: After creating configuration file enable this option.
+
 # Configuration file
-# *.config 
+establishConnectionWithDatabaseConfig.json
 
 # Compiled class file
 *.class
