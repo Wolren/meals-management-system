@@ -21,11 +21,9 @@ Port: 3306
 user: root
 
 # Inserting database connection establishment data
-1. Find "EstablishConnectionWithDatabase.java" file at `src/main/java/org/lookout_studios/meals_management_system/meals_management_system`.
+1. Find "establishConnectionWithDatabaseConfig.json" file in .config directory and open it.
 
-2. Find accessData class (ln 5).
-
-3. Change:
+2. Change:
 a. **databaseJdbcUrl** `"jdbc:mysql://localhost:3306/mms_database"` to `"jdbc:mysql://yourDatabaseIp:port/databaseName"`
 b. **databaseUsername** `""` to `"yourDatabaseUsername"`
 c. **databasePassword** `""` to `"yourDatabasePassword"`.
