@@ -16,6 +16,10 @@ import java.sql.DriverManager;
  */
 public class EstablishConnectionWithDatabase {
     static String connectionInstanceName = "com.mysql.cj.jdbc.Driver";
+    static String jsonConfigFilePath = ".config\\establishConnectionWithDatabaseConfig.json";
+    static String jsonDatabaseJdbcUrlVariable = "databaseJdbcUrl";
+    static String jsonDatabaseUsernameVariable = "databaseUsername";
+    static String jsonDatabasePasswordVariable = "databasePassword";
     /**
      * 
      * The method connects with database using database url and admin credentials.
@@ -28,12 +32,12 @@ public class EstablishConnectionWithDatabase {
         try {
             /* Read configuration data from JSON file. */
             FileReader jsonFileDataReader = new FileReader
-                (".config\\establishConnectionWithDatabaseConfig.json");
+                (jsonConfigFilePath);
             Object saveParsedData = jsonParser.parse(jsonFileDataReader);
             JSONObject saveJsonData = (JSONObject)saveParsedData;
-            String databaseJdbcUrl = (String) saveJsonData.get("databaseJdbcUrl"); /* Naming comes from JSON variables. */
-            String databaseUsername = (String) saveJsonData.get("databaseUsername");
-            String databasePassword = (String) saveJsonData.get("databasePassword");
+            String databaseJdbcUrl = (String) saveJsonData.get(jsonDatabaseJdbcUrlVariable);
+            String databaseUsername = (String) saveJsonData.get(jsonDatabaseUsernameVariable);
+            String databasePassword = (String) saveJsonData.get(jsonDatabasePasswordVariable);
             /* Establish MySQL connection. */
             Class.forName (connectionInstanceName);
             accessConnection = DriverManager.getConnection 
