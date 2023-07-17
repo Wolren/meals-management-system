@@ -24,6 +24,6 @@ user: root
 1. Find "establishConnectionWithDatabaseConfig.json" file in .config directory and open it.
 
 2. Change:
-a. **databaseJdbcUrl** `"jdbc:mysql://localhost:3306/mms_database"` to `"jdbc:mysql://yourDatabaseIp:port/databaseName"`
-b. **databaseUsername** `""` to `"yourDatabaseUsername"`
-c. **databasePassword** `""` to `"yourDatabasePassword"`.
+- **databaseJdbcUrl** `"jdbc:mysql://localhost:3306/mms_database"` to `"jdbc:mysql://yourDatabaseIp:port/databaseName"`
+- **databaseUsername** `""` to `"yourDatabaseUsername"`
+- **databasePassword** `""` to `"yourDatabasePassword"`.
