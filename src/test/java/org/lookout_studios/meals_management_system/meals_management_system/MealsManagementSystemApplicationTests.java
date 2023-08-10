@@ -8,6 +8,12 @@ class MealsManagementSystemApplicationTests {
 
 	@Test
 	void contextLoads() {
+		EstablishConnectionWithDatabaseTest 
+		connectionWithDatabaseFileReferenceSetUp = new EstablishConnectionWithDatabaseTest () ;
+	connectionWithDatabaseFileReferenceSetUp.setUp ();
+		EstablishConnectionWithDatabaseTest
+		connectionWithDatabaseFileReference = new EstablishConnectionWithDatabaseTest () ;
+	connectionWithDatabaseFileReference.testMockDBConnection ();
 	}
 
 }
