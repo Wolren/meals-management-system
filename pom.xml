@@ -48,8 +48,36 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency> <!--Connect to MySQL Server-->
+	    		<groupId>com.microsoft.sqlserver</groupId>
+	    		<artifactId>mssql-jdbc</artifactId>
+	    		<version>8.2.1.jre11</version>
+		</dependency>
+		<!--Mock Database-->
+		<dependency> 
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>5.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>5.9.3</version>
+				<type>pom</type>
+				<scope>import</scope>
+		</dependency>
+		<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
