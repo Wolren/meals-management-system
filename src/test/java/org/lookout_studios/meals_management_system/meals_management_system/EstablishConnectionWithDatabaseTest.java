@@ -3,13 +3,11 @@ package org.lookout_studios.meals_management_system.meals_management_system;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.validateMockitoUsage;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.Statement;
 
-import org.aspectj.lang.annotation.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
