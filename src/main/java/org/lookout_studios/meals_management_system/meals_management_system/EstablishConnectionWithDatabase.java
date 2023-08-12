@@ -37,7 +37,8 @@ public class EstablishConnectionWithDatabase {
          */
         ResultSet result = null;
         try {
-            Connection accessConnection = establishConnection();
+            Connection accessConnection;
+            accessConnection = establishConnection();
             Statement statement = accessConnection.createStatement();
             result = statement.executeQuery(query);
             accessConnection.close();
@@ -75,5 +76,13 @@ public class EstablishConnectionWithDatabase {
             System.out.println(mysqlError);
         }
         return accessConnection;
+    }
+
+    public boolean isUserRegistered(String email) throws Exception {
+        String result = executeQuery(
+                String.format(
+                        "SELECT u.email FROM users u WHERE u.email = %s",
+                        email));
+        return true;
     }
 }
