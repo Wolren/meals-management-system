@@ -2,11 +2,14 @@ package org.lookout_studios.meals_management_system.meals_management_system;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.validateMockitoUsage;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.Statement;
 
+import org.aspectj.lang.annotation.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +20,7 @@ import org.mockito.MockitoAnnotations;
 public class EstablishConnectionWithDatabaseTest {
 
     @InjectMocks
-    private EstablishConnectionWithDatabase dbConnectionMock;
+    private DatabaseService dbConnectionMock;
     @Mock
     private Connection mockConnection;
     @Mock
@@ -26,7 +29,7 @@ public class EstablishConnectionWithDatabaseTest {
     @Before
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        dbConnectionMock = mock(EstablishConnectionWithDatabase.class);
+        dbConnectionMock = mock(DatabaseService.class);
     }
 
     @Test
@@ -34,10 +37,11 @@ public class EstablishConnectionWithDatabaseTest {
         try {
             Mockito.when(mockConnection.createStatement()).thenReturn(mockStatement);
             Mockito.when(mockConnection.createStatement().executeUpdate(Mockito.any())).thenReturn(1);
-            Mockito.verify(mockConnection.createStatement(), Mockito.times(1));
+            Mockito.verify(mockConnection).createStatement();
         } catch (Exception mysqlError) {
             System.out.println(mysqlError);
         }
+        validateMockitoUsage();
     }
 
     @Test

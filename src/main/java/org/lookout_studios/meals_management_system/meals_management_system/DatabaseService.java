@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
 /**
@@ -16,7 +17,7 @@ import java.sql.Statement;
  * 
  * @author Hubert Borysowski
  */
-public class EstablishConnectionWithDatabase {
+public class DatabaseService {
     static String connectionInstanceName = "com.mysql.cj.jdbc.Driver";
     static String jsonConfigFilePath = ".config\\establishConnectionWithDatabaseConfig.json";
     static String jsonUrlKey = "databaseJdbcUrl";
@@ -29,23 +30,22 @@ public class EstablishConnectionWithDatabase {
      * 
      * @param query mySQL query
      * @return Result of the query
+     * @param connection Connection with the database
+     *                   established with establishConnection();
      * @throws Exception
      */
-    public String executeQuery(String query) throws Exception {
+    public ResultSet executeQuery(String query, Connection connection) throws Exception {
         /*
          * Create JSONParser object, so you can read configuration data from JSON file.
          */
         ResultSet result = null;
         try {
-            Connection accessConnection;
-            accessConnection = establishConnection();
-            Statement statement = accessConnection.createStatement();
+            Statement statement = connection.createStatement();
             result = statement.executeQuery(query);
-            accessConnection.close();
         } catch (Exception exception) {
             throw exception;
         }
-        return result.toString();
+        return result;
     }
 
     /**
@@ -78,11 +78,24 @@ public class EstablishConnectionWithDatabase {
         return accessConnection;
     }
 
+    /**
+     * Checks if a user with a given email is present in the database
+     * 
+     * @param email of a user
+     * @return true if an email is found in the database, false if it isn't
+     * @throws Exception
+     */
     public boolean isUserRegistered(String email) throws Exception {
-        String result = executeQuery(
+        Connection connection = establishConnection();
+        ResultSet result = executeQuery(
                 String.format(
-                        "SELECT u.email FROM users u WHERE u.email = %s",
-                        email));
+                        "SELECT u.email FROM users u WHERE u.email = \"%s\"",
+                        email),
+                connection);
+        if (!result.next()) {
+            return false;
+        }
+        connection.close();
         return true;
     }
 }
