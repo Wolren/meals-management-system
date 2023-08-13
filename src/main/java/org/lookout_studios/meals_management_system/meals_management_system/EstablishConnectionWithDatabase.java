@@ -8,52 +8,72 @@ import java.io.FileReader;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 /**
  * Class establishing connection with database.
  * 
- * @author Hubert Borysowski  
+ * @author Hubert Borysowski
  */
 public class EstablishConnectionWithDatabase {
     static String connectionInstanceName = "com.mysql.cj.jdbc.Driver";
     static String jsonConfigFilePath = ".config\\establishConnectionWithDatabaseConfig.json";
-    static String jsonDatabaseJdbcUrlVariable = "databaseJdbcUrl";
-    static String jsonDatabaseUsernameVariable = "databaseUsername";
-    static String jsonDatabasePasswordVariable = "databasePassword";
+    static String jsonUrlKey = "databaseJdbcUrl";
+    static String jsonUsernameKey = "databaseUsername";
+    static String jsonPasswordKey = "databasePassword";
+
     /**
+     * Creates an SQL connection with a database,
+     * executes a query and closes the connection.
      * 
-     * The method connects with database using database url and admin credentials.
-     * @throws org.json.simple.parser.ParseException
+     * @param query mySQL query
+     * @return Result of the query
+     * @throws Exception
      */
-    public void createSqlConnection () {
-        /* Create JSONParser object, so you can read configuration data from JSON file. */
-        JSONParser jsonParser = new JSONParser();
-        Connection accessConnection;
+    public String executeQuery(String query) throws Exception {
+        /*
+         * Create JSONParser object, so you can read configuration data from JSON file.
+         */
+        ResultSet result = null;
         try {
-            /* Read configuration data from JSON file. */
-            FileReader jsonFileDataReader = new FileReader
-                (jsonConfigFilePath);
-            Object saveParsedData = jsonParser.parse(jsonFileDataReader);
-            JSONObject saveJsonData = (JSONObject)saveParsedData;
-            String databaseJdbcUrl = (String) saveJsonData.get(jsonDatabaseJdbcUrlVariable);
-            String databaseUsername = (String) saveJsonData.get(jsonDatabaseUsernameVariable);
-            String databasePassword = (String) saveJsonData.get(jsonDatabasePasswordVariable);
-            /* Establish MySQL connection. */
-            Class.forName (connectionInstanceName);
-            accessConnection = DriverManager.getConnection 
-                (databaseJdbcUrl, databaseUsername, databasePassword);
-            accessConnection.close ();
+            Connection accessConnection = establishConnection();
+            Statement statement = accessConnection.createStatement();
+            result = statement.executeQuery(query);
+            accessConnection.close();
+        } catch (Exception exception) {
+            throw exception;
         }
-        catch (FileNotFoundException fileNotFoundError)
-        {
+        return result.toString();
+    }
+
+    /**
+     * Reads credentials form a config file and establishes
+     * a connection with a database using them.
+     * 
+     * @return A Connection object ready to be used
+     */
+    private Connection establishConnection() {
+        Connection accessConnection = null;
+        try {
+            JSONParser jsonParser = new JSONParser();
+            FileReader jsonFileDataReader = new FileReader(jsonConfigFilePath);
+            JSONObject saveJsonData = (JSONObject) jsonParser.parse(jsonFileDataReader);
+            String databaseJdbcUrl = (String) saveJsonData.get(jsonUrlKey);
+            String databaseUsername = (String) saveJsonData.get(jsonUsernameKey);
+            String databasePassword = (String) saveJsonData.get(jsonPasswordKey);
+            Class.forName(connectionInstanceName);
+            accessConnection = DriverManager.getConnection(
+                    databaseJdbcUrl,
+                    databaseUsername,
+                    databasePassword);
+        } catch (FileNotFoundException fileNotFoundError) {
             System.out.println(fileNotFoundError);
-        }
-        catch (IOException ioError)
-        {
+        } catch (IOException ioError) {
             System.out.println(ioError);
+        } catch (Exception mysqlError) {
+            System.out.println(mysqlError);
         }
-        catch (Exception mysqlError) {
-            System.out.println (mysqlError);
-        }
+        return accessConnection;
     }
 }
