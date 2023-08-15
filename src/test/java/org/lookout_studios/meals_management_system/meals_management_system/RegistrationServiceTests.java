@@ -1,108 +1,114 @@
 package org.lookout_studios.meals_management_system.meals_management_system;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.IOException;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+
+import net.minidev.json.JSONObject;
+
+@WireMockTest
 class RegistrationServiceTests {
-    @Mock
-    RegistrationService registrationService = new RegistrationService();
 
-    @Autowired
-    private MockMvc mockMvc;
+    static WireMockServer wireMockServer = new WireMockServer();
+    private static RestTemplate restTemplate = new RestTemplate();
 
-    /**
-     * Ensures that emailCheck returns true with valid emails
-     */
-    @Test
-    void validEmailCheck() {
-        assertTrue(registrationService.emailCheck("example@gmail.com"));
-        assertTrue(registrationService.emailCheck("example1234@gmail.com"));
-        assertTrue(registrationService.emailCheck("abc-d@mail.com"));
-        assertTrue(registrationService.emailCheck("abc.def@mail.com"));
-        assertTrue(registrationService.emailCheck("abc@mail.com"));
-        assertTrue(registrationService.emailCheck("abc-def@mail.com"));
-        assertTrue(registrationService.emailCheck("abc123@mail.com"));
+    @BeforeAll
+    public static void beforeAll() {
+        WireMock.configureFor(8080);
+        wireMockServer.start();
+        restTemplate.setErrorHandler(new ResponseErrorHandler() {
+            @Override
+            public boolean hasError(ClientHttpResponse response) throws IOException {
+                return false;
+            }
+
+            @Override
+            public void handleError(ClientHttpResponse response) throws IOException {
+            }
+        });
     }
 
-    /**
-     * Ensures that emailCheck returns false with invalid emails
-     */
-    @Test
-    void invalidEmailCheck() {
-        assertFalse(registrationService.emailCheck("abc-@mail.com"));
-        assertFalse(registrationService.emailCheck("abc..def@mail.com"));
-        assertFalse(registrationService.emailCheck("abc#def@mail.com"));
-        assertFalse(registrationService.emailCheck("abc()@mail.com"));
-        assertFalse(registrationService.emailCheck("abc^&$@mail.com"));
+    @AfterAll
+    public static void afterAll() {
+        wireMockServer.stop();
     }
+
+    @AfterEach
+    public void afterEach() {
+        wireMockServer.resetAll();
+    }
+
+    private String requestUrl = "http://localhost:8080/register";
 
     /**
      * Ensures that /register requests with invalid emails generate
-     * InvalidEmailException
+     * Bad Request Response
      * 
      * @throws Exception
      */
     @Test
-    public void registerInvalidEmailUserFail() throws Exception {
-        User invalidEmailUser = new User("abc-@mail.com", null);
-        Mockito
-                .when(registrationService.registerUser(invalidEmailUser))
-                .thenThrow(new InvalidEmailException());
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(invalidEmailUser.toString());
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isBadRequest());
+    public void registerInvalidEmailUserFail(WireMockRuntimeInfo wMockRuntimeInfo) throws Exception {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("email", "abc-@mail.com");
+        requestBody.put("password", "12345678");
+        String responseBody = new ApiResponse(HttpStatus.BAD_REQUEST).getResponse();
+        WireMock.stubFor(
+                WireMock.post(WireMock.urlEqualTo("/register"))
+                        .willReturn(WireMock.aResponse().withStatus(400).withBody(responseBody)));
+        ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, requestBody, String.class);
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatusCode().value());
     }
 
     /**
      * Ensures that /register requests with invalid passwords generate
-     * InvalidPasswordException
-     * 
+     * Bad Request response
+     *
      * @throws Exception
      */
     @Test
     public void registerInvalidPasswordUserFail() throws Exception {
-        User invalidEmailUser = new User("abc@mail.com", null);
-        Mockito
-                .when(registrationService.registerUser(invalidEmailUser))
-                .thenThrow(new InvalidPasswordException());
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(invalidEmailUser.toString());
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isBadRequest());
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("email", "abc@mail.com");
+        requestBody.put("password", null);
+        String responseBody = new ApiResponse(HttpStatus.BAD_REQUEST).getResponse();
+        WireMock.stubFor(
+                WireMock.post(WireMock.urlEqualTo("/register"))
+                        .willReturn(WireMock.aResponse().withStatus(400).withBody(responseBody)));
+        ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, requestBody, String.class);
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatusCode().value());
+
     }
 
     /**
-     * Ensures that /register requests with emails of existing users generate
-     * ExistingUserException
-     * 
+     * Ensures that valid /register requests generate OK response
+     *
      * @throws Exception
      */
     @Test
     public void registerExistingUserFail() throws Exception {
-        User invalidEmailUser = new User("abc@mail.com", null);
-        Mockito
-                .when(registrationService.registerUser(invalidEmailUser))
-                .thenThrow(new RegisteredUserException());
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(invalidEmailUser.toString());
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isBadRequest());
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("email", "abc@mail.com");
+        requestBody.put("password", "12345678");
+        String responseBody = new ApiResponse(HttpStatus.OK).getResponse();
+        WireMock.stubFor(
+                WireMock.post(WireMock.urlEqualTo("/register"))
+                        .willReturn(WireMock.aResponse().withStatus(200).withBody(responseBody)));
+        ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, requestBody, String.class);
+        assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
     }
 }

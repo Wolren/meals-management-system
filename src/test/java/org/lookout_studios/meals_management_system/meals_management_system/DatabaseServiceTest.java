@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class EstablishConnectionWithDatabaseTest {
+public class DatabaseServiceTest {
 
   @InjectMocks
   private DatabaseService dbConnectionMock;
@@ -44,8 +44,7 @@ public class EstablishConnectionWithDatabaseTest {
 
   @Test
   public void userPresentInTheDb() throws Exception {
-    User existingUser = new User();
-    existingUser.setEmail("test@email.com");
+    User existingUser = new User("test@email.com", "");
     String userEmail = existingUser.getEmail();
     when(dbConnectionMock.isUserRegistered(userEmail)).thenReturn(true);
     boolean registered = dbConnectionMock.isUserRegistered(userEmail);
@@ -54,8 +53,7 @@ public class EstablishConnectionWithDatabaseTest {
 
   @Test
   public void userNotPresentInDb() throws Exception {
-    User newUser = new User();
-    newUser.setEmail("new@email.com");
+    User newUser = new User("new@email.com", "");
     String userEmail = newUser.getEmail();
     when(dbConnectionMock.isUserRegistered(userEmail)).thenReturn(false);
     boolean registered = dbConnectionMock.isUserRegistered(userEmail);
