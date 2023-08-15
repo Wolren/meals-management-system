@@ -2,6 +2,9 @@ package org.lookout_studios.meals_management_system.meals_management_system;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.FileReader;
@@ -22,6 +25,9 @@ public class DatabaseService {
     static String jsonUrlKey = "databaseJdbcUrl";
     static String jsonUsernameKey = "databaseUsername";
     static String jsonPasswordKey = "databasePassword";
+    static String executeQueryExceptionReason = "Failed to execute query";
+
+    Logger log = LoggerFactory.getLogger(DatabaseService.class);
 
     /**
      * Creates an SQL connection with a database,
@@ -33,15 +39,30 @@ public class DatabaseService {
      *                   established with establishConnection();
      * @throws Exception
      */
-    public ResultSet executeQuery(String query, Connection connection) throws Exception {
+    public ResultSet executeSelectQuery(String query, Connection connection) throws Exception {
         /*
          * Create JSONParser object, so you can read configuration data from JSON file.
          */
         ResultSet result = null;
         try {
+            log.info(String.format("Executing query %s", query));
             Statement statement = connection.createStatement();
             result = statement.executeQuery(query);
         } catch (Exception exception) {
+            log.error(exception.getMessage());
+            throw exception;
+        }
+        return result;
+    }
+
+    public boolean executeOtherQuery(String query, Connection connection) throws Exception {
+        boolean result = false;
+        try {
+            log.info(String.format("Executing query %s", query));
+            Statement statement = connection.createStatement();
+            result = statement.execute(query);
+        } catch (Exception exception) {
+            log.error(exception.getMessage());
             throw exception;
         }
         return result;
@@ -86,15 +107,33 @@ public class DatabaseService {
      */
     public boolean isUserRegistered(String email) throws Exception {
         Connection connection = establishConnection();
-        ResultSet result = executeQuery(
-                String.format(
-                        "SELECT u.email FROM users u WHERE u.email = \"%s\"",
-                        email),
-                connection);
-        if (!result.next()) {
-            return false;
+        try {
+            ResultSet result = executeSelectQuery(
+                    String.format(
+                            "SELECT u.email FROM users u WHERE u.email = \"%s\";",
+                            email),
+                    connection);
+            if (!result.next()) {
+                return false;
+            }
+        } catch (Exception exception) {
+            throw exception;
         }
         connection.close();
         return true;
+    }
+
+    public void registerNewUser(User user) throws Exception {
+        Connection connection = establishConnection();
+        try {
+            executeOtherQuery(
+                    String.format(
+                            "INSERT INTO users (email, password, isVerified, registrationToken) VALUES (\"%s\", %d, false, \"%s\");",
+                            user.getEmail(), user.getPasswordHash(), user.getRegistrationToken()),
+                    connection);
+        } catch (Exception exception) {
+            throw exception;
+        }
+        connection.close();
     }
 }

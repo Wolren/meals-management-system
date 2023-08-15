@@ -6,11 +6,13 @@ import java.util.Base64;
 public class User {
     private int userId;
     private String email;
-    private String password;
+    private int passwordHash;
     private String registrationToken;
+    private String password;
 
     public User(String email, String password) {
         this.email = email;
+        this.passwordHash = password.hashCode();
         this.password = password;
     }
 
@@ -18,24 +20,20 @@ public class User {
         return userId;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    /**
-     * Puts contents of the User object into the database
-     */
-    public void register() {
-        // TO-DO: Put the token and other properties in the database
-        throw new UnsupportedOperationException("Not implemented");
+    public String getPassword() {
+        return password;
     }
 
     private static final SecureRandom secureRandom = new SecureRandom();
@@ -50,5 +48,13 @@ public class User {
         String token = base64Encoder.encodeToString(tokenBytes);
         this.registrationToken = token;
         return token;
+    }
+
+    public int getPasswordHash() {
+        return passwordHash;
+    }
+
+    public String getRegistrationToken() {
+        return registrationToken;
     }
 }
