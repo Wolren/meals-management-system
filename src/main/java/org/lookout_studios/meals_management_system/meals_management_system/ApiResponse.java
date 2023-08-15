@@ -9,10 +9,34 @@ import org.springframework.http.HttpStatus;
 public class ApiResponse {
     private JSONObject responseJson;
 
+    /**
+     * A default content of an API response
+     * 
+     * @param status  HTTP status of the response
+     * @param message A custom message to be included in the response
+     */
+    public ApiResponse(HttpStatus status, String message) {
+        responseJson = jsonPairs(
+                "status", status.value(),
+                "message", message);
+    }
+
+    public ApiResponse(HttpStatus status) {
+        responseJson = new JSONObject();
+        responseJson.put("status", status);
+    }
+
     public ApiResponse(Object... keyValuePairs) {
         jsonPairs(keyValuePairs);
     }
 
+    /**
+     * Allows for addition of custom elements to the responseJson in key-value
+     * pairs
+     * 
+     * @param keyValuePairs Key-value pairs
+     * @return A JSONObject containing provided input
+     */
     public JSONObject jsonPairs(Object... keyValuePairs) {
         responseJson = new JSONObject();
         for (int i = 0; i < keyValuePairs.length; i += 2) {
@@ -23,21 +47,11 @@ public class ApiResponse {
         return responseJson;
     }
 
+    /**
+     * 
+     * @return An API response as JSON
+     */
     public String getResponse() {
         return responseJson.toString();
-    }
-
-    public ApiResponse(HttpStatus status) {
-        responseJson = new JSONObject();
-        responseJson.put("status", status);
-    }
-
-    /**
-     * @return JSON response as string
-     */
-    public ApiResponse(HttpStatus status, String message) {
-        responseJson = jsonPairs(
-                "status", status.value(),
-                "message", message);
     }
 }

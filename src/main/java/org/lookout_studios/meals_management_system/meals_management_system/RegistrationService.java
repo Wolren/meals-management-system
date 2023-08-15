@@ -84,7 +84,10 @@ public class RegistrationService {
     }
 
     /**
-     * This method checks whether an email address has a correct format
+     * Checks if a given string is a valid email address
+     * 
+     * @param email An email address to be checked
+     * @return True if a string is a valid email address, false if it isn't
      */
     public boolean emailCheck(String email) {
         Pattern pattern = Pattern.compile("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$");
@@ -93,6 +96,12 @@ public class RegistrationService {
         return answer;
     }
 
+    /**
+     * Checks if a given password is valid i.e. is at least 8 characters long
+     * 
+     * @param password Password to be checked
+     * @return True if a password is valid, false if it's invalid
+     */
     public boolean passwordCheck(String password) {
         boolean match;
         try {

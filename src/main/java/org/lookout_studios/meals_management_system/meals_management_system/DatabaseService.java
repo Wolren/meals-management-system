@@ -31,23 +31,23 @@ public class DatabaseService {
 
     /**
      * Creates an SQL connection with a database,
-     * executes a query and closes the connection.
+     * executes a SELECT query and closes the connection.
      * 
-     * @param query mySQL query
+     * @param selectQuery mySQL SELECT query
      * @return Result of the query
      * @param connection Connection with the database
      *                   established with establishConnection();
      * @throws Exception
      */
-    public ResultSet executeSelectQuery(String query, Connection connection) throws Exception {
+    public ResultSet executeSelectQuery(String selectQuery, Connection connection) throws Exception {
         /*
          * Create JSONParser object, so you can read configuration data from JSON file.
          */
         ResultSet result = null;
         try {
-            log.info(String.format("Executing query %s", query));
+            log.info(String.format("Executing query %s", selectQuery));
             Statement statement = connection.createStatement();
-            result = statement.executeQuery(query);
+            result = statement.executeQuery(selectQuery);
         } catch (Exception exception) {
             log.error(exception.getMessage());
             throw exception;
@@ -55,6 +55,15 @@ public class DatabaseService {
         return result;
     }
 
+    /**
+     * 
+     * @param query      Non-SELECT mySQL query
+     * @param connection A connection object created with establishConnection()
+     *                   method
+     * @return A boolean representing database response. See
+     *         java.sql.Statement.execute() for further details
+     * @throws Exception
+     */
     public boolean executeOtherQuery(String query, Connection connection) throws Exception {
         boolean result = false;
         try {
@@ -123,6 +132,12 @@ public class DatabaseService {
         return true;
     }
 
+    /**
+     * Registers new user in the database
+     * 
+     * @param user A user object representing a user to be registered
+     * @throws Exception
+     */
     public void registerNewUser(User user) throws Exception {
         Connection connection = establishConnection();
         try {
