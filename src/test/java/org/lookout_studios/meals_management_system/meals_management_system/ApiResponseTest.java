@@ -3,12 +3,13 @@ package org.lookout_studios.meals_management_system.meals_management_system;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class JsonResponseTests {
+public class ApiResponseTest {
 
     @Test
     public void testJsonResponse() {
         // Creating a JSON response
-        JsonResponse response = new JsonResponse("status", "success", "message", "Operation completed successfully");
+        ApiResponse response = new ApiResponse("status", "success", "message",
+                "Operation completed successfully");
 
         // Getting the JSON response
         String jsonResponse = response.getResponse();
@@ -20,5 +21,3 @@ public class JsonResponseTests {
         Assertions.assertEquals(expectedJsonResponse, jsonResponse, "The JSON response is not as expected");
     }
 }
-
-
