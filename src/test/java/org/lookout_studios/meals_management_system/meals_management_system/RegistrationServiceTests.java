@@ -66,7 +66,7 @@ class RegistrationServiceTests {
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", "abc-@mail.com");
         requestBody.put("password", "12345678");
-        String responseBody = new ApiResponse(HttpStatus.BAD_REQUEST).getResponse();
+        String responseBody = new ResponseBody(HttpStatus.BAD_REQUEST).getResponseBody();
         WireMock.stubFor(
                 WireMock.post(WireMock.urlEqualTo("/register"))
                         .willReturn(WireMock.aResponse().withStatus(400).withBody(responseBody)));
@@ -85,7 +85,7 @@ class RegistrationServiceTests {
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", "abc@mail.com");
         requestBody.put("password", null);
-        String responseBody = new ApiResponse(HttpStatus.BAD_REQUEST).getResponse();
+        String responseBody = new ResponseBody(HttpStatus.BAD_REQUEST).getResponseBody();
         WireMock.stubFor(
                 WireMock.post(WireMock.urlEqualTo("/register"))
                         .willReturn(WireMock.aResponse().withStatus(400).withBody(responseBody)));
@@ -104,7 +104,7 @@ class RegistrationServiceTests {
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", "abc@mail.com");
         requestBody.put("password", "12345678");
-        String responseBody = new ApiResponse(HttpStatus.OK).getResponse();
+        String responseBody = new ResponseBody(HttpStatus.OK).getResponseBody();
         WireMock.stubFor(
                 WireMock.post(WireMock.urlEqualTo("/register"))
                         .willReturn(WireMock.aResponse().withStatus(200).withBody(responseBody)));

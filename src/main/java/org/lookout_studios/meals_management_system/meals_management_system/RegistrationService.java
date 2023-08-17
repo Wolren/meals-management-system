@@ -40,13 +40,13 @@ public class RegistrationService {
         if (!emailCheck(userEmail)) {
             log.info(String.format("Email '%s' is invalid", userEmail));
             return new ResponseEntity<String>(
-                    new ApiResponse(HttpStatus.BAD_REQUEST, invalidEmailMessage).getResponse(),
+                    new ResponseBody(HttpStatus.BAD_REQUEST, invalidEmailMessage).getResponseBody(),
                     HttpStatus.BAD_REQUEST);
         }
         if (!passwordCheck(user.getPassword())) {
             log.info(String.format("Password provided by %s is invalid", userEmail));
             return new ResponseEntity<String>(
-                    new ApiResponse(HttpStatus.BAD_REQUEST, invalidPasswordMessage).getResponse(),
+                    new ResponseBody(HttpStatus.BAD_REQUEST, invalidPasswordMessage).getResponseBody(),
                     HttpStatus.BAD_REQUEST);
         }
         DatabaseService databaseService = new DatabaseService();
@@ -60,9 +60,9 @@ public class RegistrationService {
                         "User with email %s is already registered",
                         userEmail));
                 return new ResponseEntity<String>(
-                        new ApiResponse(
+                        new ResponseBody(
                                 HttpStatus.BAD_REQUEST,
-                                alreadyRegisteredMessage).getResponse(),
+                                alreadyRegisteredMessage).getResponseBody(),
                         HttpStatus.BAD_REQUEST);
             }
             log.info(String.format(
@@ -80,7 +80,7 @@ public class RegistrationService {
                 "User with email %s registered successfully",
                 userEmail));
         return new ResponseEntity<String>(
-                new ApiResponse(HttpStatus.OK).getResponse(), HttpStatus.OK);
+                new ResponseBody(HttpStatus.OK).getResponseBody(), HttpStatus.OK);
     }
 
     /**

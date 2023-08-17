@@ -8,11 +8,11 @@ public class ApiResponseTest {
     @Test
     public void testJsonResponse() {
         // Creating a JSON response
-        ApiResponse response = new ApiResponse("status", "success", "message",
+        ResponseBody response = new ResponseBody("status", "success", "message",
                 "Operation completed successfully");
 
         // Getting the JSON response
-        String jsonResponse = response.getResponse();
+        String jsonResponse = response.getResponseBody();
 
         // Expected JSON response
         String expectedJsonResponse = "{\"message\":\"Operation completed successfully\",\"status\":\"success\"}";

@@ -4,29 +4,29 @@ import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 
 /*
- * This class can be used to generate JSON API responses
+ * This class can be used to generate JSON bodies for API responses
  */
-public class ApiResponse {
+public class ResponseBody {
     private JSONObject responseJson;
 
     /**
-     * A default content of an API response
+     * A default content of a JSON response body
      * 
      * @param status  HTTP status of the response
      * @param message A custom message to be included in the response
      */
-    public ApiResponse(HttpStatus status, String message) {
+    public ResponseBody(HttpStatus status, String message) {
         responseJson = jsonPairs(
                 "status", status.value(),
                 "message", message);
     }
 
-    public ApiResponse(HttpStatus status) {
+    public ResponseBody(HttpStatus status) {
         responseJson = new JSONObject();
         responseJson.put("status", status);
     }
 
-    public ApiResponse(Object... keyValuePairs) {
+    public ResponseBody(Object... keyValuePairs) {
         jsonPairs(keyValuePairs);
     }
 
@@ -49,9 +49,9 @@ public class ApiResponse {
 
     /**
      * 
-     * @return An API response as JSON
+     * @return An API response body as JSON
      */
-    public String getResponse() {
+    public String getResponseBody() {
         return responseJson.toString();
     }
 }
