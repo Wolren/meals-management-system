@@ -20,6 +20,9 @@ public class EmailCheckTest {
         assertTrue(registrationService.emailCheck("abc@mail.com"));
         assertTrue(registrationService.emailCheck("abc-def@mail.com"));
         assertTrue(registrationService.emailCheck("abc123@mail.com"));
+        assertTrue(registrationService.emailCheck("will+extra@example.com"));
+        assertTrue(registrationService.emailCheck("name.other.name@example.com"));
+        assertTrue(registrationService.emailCheck("name_other_name@example.com"));
     }
 
     /**
@@ -32,6 +35,8 @@ public class EmailCheckTest {
         assertFalse(registrationService.emailCheck("abc#def@mail.com"));
         assertFalse(registrationService.emailCheck("abc()@mail.com"));
         assertFalse(registrationService.emailCheck("abc^&$@mail.com"));
+        assertFalse(registrationService.emailCheck("abc.def@mail.com."));
+        assertFalse(registrationService.emailCheck("abc.def@mail.com2"));
         assertFalse(registrationService.emailCheck(null));
     }
 }
