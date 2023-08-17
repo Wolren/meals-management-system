@@ -3,7 +3,7 @@ package org.lookout_studios.meals_management_system.meals_management_system;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ApiResponseTest {
+public class ResponseBodyTest {
 
     @Test
     public void testJsonResponse() {
