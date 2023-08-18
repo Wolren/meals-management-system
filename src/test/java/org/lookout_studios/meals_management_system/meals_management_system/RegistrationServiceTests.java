@@ -62,7 +62,7 @@ class RegistrationServiceTests {
      * @throws Exception
      */
     @Test
-    public void registerInvalidEmailUserFail(WireMockRuntimeInfo wMockRuntimeInfo) throws Exception {
+    public void registerInvalidEmailUserFail() throws Exception {
         JSONObject requestBody = new JSONObject();
         requestBody.put("email", "abc-@mail.com");
         requestBody.put("password", "12345678");
