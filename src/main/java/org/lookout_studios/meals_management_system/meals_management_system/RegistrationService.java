@@ -92,8 +92,8 @@ public class RegistrationService {
     public boolean emailCheck(String email) {
         boolean match;
         try {
-            Pattern pattern = Pattern.compile("^[\\w+-]+(\\.[\\w+-]+)*[\\.]?[a-zA-Z0-9]@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
-            Matcher matcher = pattern.matcher(email);
+            Pattern validEmailPattern = Pattern.compile("^[\\w+-]+(\\.[\\w+-]+)*[\\.]?[a-zA-Z0-9]@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
+            Matcher matcher = validEmailPattern.matcher(email);
             match = matcher.find();
         } catch (NullPointerException exception) {
             return false;

@@ -70,6 +70,10 @@ class RegistrationServiceTests {
         WireMock.stubFor(
                 WireMock.post(WireMock.urlEqualTo("/register"))
                         .willReturn(WireMock.aResponse().withStatus(400).withBody(responseBody)));
+                        /**
+                         * response with status 400 Bad Request 
+                         * the server will not process the request due to a client error
+                         */
         ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, requestBody, String.class);
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatusCode().value());
     }
@@ -89,6 +93,10 @@ class RegistrationServiceTests {
         WireMock.stubFor(
                 WireMock.post(WireMock.urlEqualTo("/register"))
                         .willReturn(WireMock.aResponse().withStatus(400).withBody(responseBody)));
+                        /**
+                         * response with status 400 Bad Request 
+                         * the server will not process the request due to a client error
+                         */
         ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, requestBody, String.class);
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatusCode().value());
 
@@ -108,6 +116,9 @@ class RegistrationServiceTests {
         WireMock.stubFor(
                 WireMock.post(WireMock.urlEqualTo("/register"))
                         .willReturn(WireMock.aResponse().withStatus(200).withBody(responseBody)));
+                        /**
+                         * response with status 200 OK - the request succeeded
+                         */
         ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, requestBody, String.class);
         assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
     }
