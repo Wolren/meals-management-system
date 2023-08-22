@@ -14,3 +14,9 @@ Suggested branches naming convetion: `task_number-task_name`.
 Commit message naming convention: `task_number if implemented this commit will`.
 
 To get task numbers, use: [Trello Card Numbers Plus](https://chrome.google.com/webstore/detail/trello-card-numbers-plus/ncibjlmfhjcjnphnpphgphbflpdpliei/related)
+
+## Documentation
+
+The Swagger implemented by OpenAPI is used for API's documentation.
+The documentation can be found under `http://localhost:8080/swagger-ui/index.html` path by default.
+Note that API must be online if you are willing to check the documentation.
