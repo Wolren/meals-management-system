@@ -2,6 +2,9 @@ package org.lookout_studios.meals_management_system.meals_management_system;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.FileReader;
@@ -22,33 +25,60 @@ public class DatabaseService {
     static String jsonUrlKey = "databaseJdbcUrl";
     static String jsonUsernameKey = "databaseUsername";
     static String jsonPasswordKey = "databasePassword";
+    static String executeQueryExceptionReason = "Failed to execute query";
+
+    Logger log = LoggerFactory.getLogger(DatabaseService.class);
 
     /**
      * Creates an SQL connection with a database,
-     * executes a query and closes the connection.
+     * executes a SELECT query and closes the connection.
      * 
-     * @param query mySQL query
+     * @param selectQuery mySQL SELECT query
      * @return Result of the query
      * @param connection Connection with the database
      *                   established with establishConnection();
      * @throws Exception
      */
-    public ResultSet executeQuery(String query, Connection connection) throws Exception {
+    public ResultSet executeSelectQuery(String selectQuery, Connection connection) throws Exception {
         /*
          * Create JSONParser object, so you can read configuration data from JSON file.
          */
         ResultSet result = null;
         try {
+            log.info(String.format("Executing query %s", selectQuery));
             Statement statement = connection.createStatement();
-            result = statement.executeQuery(query);
+            result = statement.executeQuery(selectQuery);
         } catch (Exception exception) {
+            log.error(exception.getMessage());
             throw exception;
         }
         return result;
     }
 
     /**
-     * Reads credentials form a config file and establishes
+     * 
+     * @param query      Non-SELECT mySQL query
+     * @param connection A connection object created with establishConnection()
+     *                   method
+     * @return A boolean representing database response. See
+     *         java.sql.Statement.execute() for further details
+     * @throws Exception
+     */
+    public boolean executeOtherQuery(String query, Connection connection) throws Exception {
+        boolean result = false;
+        try {
+            log.info(String.format("Executing query %s", query));
+            Statement statement = connection.createStatement();
+            result = statement.execute(query);
+        } catch (Exception exception) {
+            log.error(exception.getMessage());
+            throw exception;
+        }
+        return result;
+    }
+
+    /**
+     * Reads credentials from a config file and establishes
      * a connection with a database using them.
      * 
      * @return A Connection object ready to be used
@@ -86,15 +116,39 @@ public class DatabaseService {
      */
     public boolean isUserRegistered(String email) throws Exception {
         Connection connection = establishConnection();
-        ResultSet result = executeQuery(
-                String.format(
-                        "SELECT u.email FROM users u WHERE u.email = \"%s\"",
-                        email),
-                connection);
-        if (!result.next()) {
-            return false;
+        try {
+            ResultSet result = executeSelectQuery(
+                    String.format(
+                            "SELECT u.email FROM users u WHERE u.email = \"%s\";",
+                            email),
+                    connection);
+            if (!result.next()) {
+                return false;
+            }
+        } catch (Exception exception) {
+            throw exception;
         }
         connection.close();
         return true;
+    }
+
+    /**
+     * Registers new user in the database
+     * 
+     * @param user A user object representing a user to be registered
+     * @throws Exception
+     */
+    public void registerNewUser(User user) throws Exception {
+        Connection connection = establishConnection();
+        try {
+            executeOtherQuery(
+                    String.format(
+                            "INSERT INTO users (email, password, isVerified, registrationToken) VALUES (\"%s\", %d, false, \"%s\");",
+                            user.getEmail(), user.getPasswordHash(), user.getRegistrationToken()),
+                    connection);
+        } catch (Exception exception) {
+            throw exception;
+        }
+        connection.close();
     }
 }
