@@ -20,3 +20,7 @@ To get task numbers, use: [Trello Card Numbers Plus](https://chrome.google.com/
 The Swagger implemented by OpenAPI is used for API's documentation.
 The documentation can be found under `http://localhost:8080/swagger-ui/index.html` path by default.
 Note that API must be online if you are willing to check the documentation.
+
+Useful links for Swagger (OpenAPI 3) usage:
+1. [Swagger Usage Examples](https://www.youtube.com/watch?v=ywtFuXYFxo4)
+2. [Article on Swagger Usage Example](https://www.javainuse.com/spring/boot_swagger3) for contrast.
