@@ -17,6 +17,7 @@ public class RegistrationService {
     private String invalidPasswordMessage = "Invalid password";
     private String alreadyRegisteredMessage = "This user already exists";
     private String validPasswordPattern = ".{8,}";
+    private String validEmailPattern = "^[\\w+-]+(\\.[\\w+-]+)*[\\.]?[a-zA-Z0-9]@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
     Logger log = LoggerFactory.getLogger(RegistrationService.class);
 
@@ -92,8 +93,8 @@ public class RegistrationService {
     public boolean emailCheck(String email) {
         boolean match;
         try {
-            Pattern validEmailPattern = Pattern.compile("^[\\w+-]+(\\.[\\w+-]+)*[\\.]?[a-zA-Z0-9]@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
-            Matcher matcher = validEmailPattern.matcher(email);
+            Pattern pattern = Pattern.compile(validEmailPattern);
+            Matcher matcher = pattern.matcher(email);
             match = matcher.find();
         } catch (NullPointerException exception) {
             return false;
