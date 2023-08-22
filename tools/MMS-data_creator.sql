@@ -6,6 +6,8 @@ CREATE TABLE `users` (
   `email` varchar(50) NOT NULL,
   `password` varchar(30) NOT NULL,
   `userId` INT AUTO_INCREMENT NOT NULL,
+  `isVerified` boolean NOT NULL,
+  `registrationToken` varchar(100) NOT NULL,
   PRIMARY KEY (`userId`)
 );
 
@@ -16,18 +18,18 @@ CREATE TABLE `fridges` (
     FOREIGN KEY (userId) REFERENCES users(userId)
 );
 
-CREATE TABLE `measurmentUnits` (
-  `measurmentUnitId` INT AUTO_INCREMENT NOT NULL,
-  `measurmentUnitName` varchar(50) NOT NULL,
-  PRIMARY KEY (`measurmentUnitId`)
+CREATE TABLE `measurementUnits` (
+  `measurementUnitId` INT AUTO_INCREMENT NOT NULL,
+  `measurementUnitName` varchar(50) NOT NULL,
+  PRIMARY KEY (`measurementUnitId`)
 );
 
 CREATE TABLE `productType` (
   `productTypeId` INT AUTO_INCREMENT NOT NULL,
   `productTypeName` varchar(50) NOT NULL,
-  `measurmentUnitId` INT,
+  `measurementUnitId` INT,
   PRIMARY KEY (`productTypeId`),
-  FOREIGN KEY (measurmentUnitId) REFERENCES measurmentUnits(measurmentUnitId)
+  FOREIGN KEY (measurementUnitId) REFERENCES measurementUnits(measurementUnitId)
 );
 
 CREATE TABLE `productInstance`(

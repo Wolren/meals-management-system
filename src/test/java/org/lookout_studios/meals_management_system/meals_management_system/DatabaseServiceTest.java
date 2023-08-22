@@ -17,48 +17,46 @@ import org.mockito.MockitoAnnotations;
 
 public class DatabaseServiceTest {
 
-    @InjectMocks
-    private DatabaseService dbConnectionMock;
-    @Mock
-    private Connection mockConnection;
-    @Mock
-    private Statement mockStatement;
+  @InjectMocks
+  private DatabaseService dbConnectionMock;
+  @Mock
+  private Connection mockConnection;
+  @Mock
+  private Statement mockStatement;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-        dbConnectionMock = mock(DatabaseService.class);
-    }
+  @Before
+  public void setup() {
+    MockitoAnnotations.openMocks(this);
+    dbConnectionMock = mock(DatabaseService.class);
+  }
 
-    @Test
-    public void testMockDBConnection() {
-        try {
-            Mockito.when(mockConnection.createStatement()).thenReturn(mockStatement);
-            Mockito.when(mockConnection.createStatement().executeUpdate(Mockito.any())).thenReturn(1);
-            Mockito.verify(mockConnection).createStatement();
-        } catch (Exception mysqlError) {
-            System.out.println(mysqlError);
-        }
-        validateMockitoUsage();
+  @Test
+  public void testMockDBConnection() {
+    try {
+      Mockito.when(mockConnection.createStatement()).thenReturn(mockStatement);
+      Mockito.when(mockConnection.createStatement().executeUpdate(Mockito.any())).thenReturn(1);
+      Mockito.verify(mockConnection).createStatement();
+    } catch (Exception mysqlError) {
+      System.out.println(mysqlError);
     }
+    validateMockitoUsage();
+  }
 
-    @Test
-    public void userPresentInTheDb() throws Exception {
-        User existingUser = new User();
-        existingUser.setEmail("test@email.com");
-        String userEmail = existingUser.getEmail();
-        when(dbConnectionMock.isUserRegistered(userEmail)).thenReturn(true);
-        boolean registered = dbConnectionMock.isUserRegistered(userEmail);
-        assertEquals(true, registered);
-    }
+  @Test
+  public void userPresentInTheDb() throws Exception {
+    User existingUser = new User("test@email.com", "");
+    String userEmail = existingUser.getEmail();
+    when(dbConnectionMock.isUserRegistered(userEmail)).thenReturn(true);
+    boolean registered = dbConnectionMock.isUserRegistered(userEmail);
+    assertEquals(true, registered);
+  }
 
-    @Test
-    public void userNotPresentInDb() throws Exception {
-        User newUser = new User();
-        newUser.setEmail("new@email.com");
-        String userEmail = newUser.getEmail();
-        when(dbConnectionMock.isUserRegistered(userEmail)).thenReturn(false);
-        boolean registered = dbConnectionMock.isUserRegistered(userEmail);
-        assertEquals(false, registered);
-    }
+  @Test
+  public void userNotPresentInDb() throws Exception {
+    User newUser = new User("new@email.com", "");
+    String userEmail = newUser.getEmail();
+    when(dbConnectionMock.isUserRegistered(userEmail)).thenReturn(false);
+    boolean registered = dbConnectionMock.isUserRegistered(userEmail);
+    assertEquals(false, registered);
+  }
 }

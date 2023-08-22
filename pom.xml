@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.1</version>
+		<version>3.1.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.lookout_studios.meals_management_system</groupId>
@@ -17,6 +17,23 @@
 		<java.version>20</java.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.wiremock</groupId>
+			<artifactId>wiremock</artifactId>
+			<version>3.0.0-beta-15</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gitlab.test-requester</groupId>
+			<artifactId>mockmvc</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.json</groupId>
+    		<artifactId>json</artifactId>
+    		<version>20230618</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -41,9 +58,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<version>8.2.1.jre11</version>
+	    		<groupId>com.microsoft.sqlserver</groupId>
+	    		<artifactId>mssql-jdbc</artifactId>
+	    		<version>8.2.1.jre11</version>
 		</dependency>
 		<dependency> 
 			<groupId>org.mockito</groupId>
