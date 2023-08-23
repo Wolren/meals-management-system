@@ -58,4 +58,3 @@ To access this feature, simply find desired endpoint in the documentation and cl
 
 ### Additional literature
 1. [OpenAPI 3, additional examples](https://asbnotebook.com/spring-boot-openapi-3-example/)
-2. [OpenAPI 3, documentation overview - an YouTube video](https://www.youtube.com/watch?v=2o_3hjUPAfQ)
