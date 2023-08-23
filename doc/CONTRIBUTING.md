@@ -30,24 +30,7 @@ In your controller classes, use Spring annotations to define API endpoints and p
 - `@ApiResponse: Define responses for different scenarios.`
 - `@ApiResponses: Group multiple @ApiResponse annotations.`
 
-Example:
-```java
-@RestController
-@RequestMapping("/api")
-public class UserController {
-
-    @GetMapping("/user/{id}")
-    @Operation(summary = "Get user by ID")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User found"),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        // Implementation
-    }
-}
-```
-Or an example from our project:
+An example from our project:
 
 ```java
 @RestController
@@ -60,59 +43,19 @@ public class RegistrationService {
 
     Logger log = LoggerFactory.getLogger(RegistrationService.class);
 
-    /**
-     * Handles /register requests by checking validity of provided data, registering
-     * new users in the database and sending confirmation emails.
-     * 
-     * @param user User object defined in a request body
-     * @return JSON response with registration token
-     * @throws Exception
-     */
+    //Javadoc entry
     @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
     public ResponseEntity<String> registerUser(@RequestBody User user) throws Exception {...}
 ```
 
 To customize API documentation use `@Bean` and `@Configuration` annotations.
-Example of creating a group and selecting the only endpoint we want to be documentated: 
-```java
-import org.springdoc.core.GroupedOpenApi;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-public class OpenApiConfig {
-
-    @Bean
-    public GroupedOpenApi api() {
-        return GroupedOpenApi.builder()
-                .group("api")
-                .pathsToMatch("/hello", "/echo")  // Specify your endpoint paths here
-                .build();
-    }
-}
-```
-And an example of creating a group and specyfing java packages.
-```java
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springdoc.core.GroupedOpenApi;
-
-@Configuration
-public class OpenApiConfig implements WebMvcConfigurer {
-
-    @Bean
-    public GroupedOpenApi customOpenApi() {
-        return GroupedOpenApi.builder()
-            .group("custom-api") // Define a group name for your APIs
-            .packagesToScan("com.example.controller") // Package(s) containing your API controllers
-            .build();
-    }
-}
-```
 
 ### Reading an API documentation
 To access API documentation turn the services online and go to the following path: `http://localhost:8080/swagger-ui.html`.
 
 OpenAPI provides a feature which allows user to send POST, GET, DELETE and PUT methods and receive a response.
 To access this feature, simply find desired endpoint in the documentation and click on it.
+
+### Additional literature
+1. [OpenAPI 3, additional examples](https://asbnotebook.com/spring-boot-openapi-3-example/)
+2. [OpenAPI 3, documentation overview - an YouTube video](https://www.youtube.com/watch?v=2o_3hjUPAfQ)
