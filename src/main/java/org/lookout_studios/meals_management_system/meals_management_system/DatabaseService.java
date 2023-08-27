@@ -77,7 +77,7 @@ public class DatabaseService {
     }
 
     /**
-     * Reads credentials form a config file and establishes
+     * Reads credentials from a config file and establishes
      * a connection with a database using them.
      * 
      * @return A Connection object ready to be used
