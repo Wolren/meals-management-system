@@ -27,7 +27,29 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public class VerificationServiceTest {
 
-    private static RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = ignoreHttpErrors();
+
+    /**
+     * This method ensures that rest template does not throw exceptions when http
+     * responses are other than 200 (OK)
+     * 
+     * @return A RestTemplate object with an error handler which does not throw
+     *         exceptions when encountering errors
+     */
+    private RestTemplate ignoreHttpErrors() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new ResponseErrorHandler() {
+            @Override
+            public boolean hasError(ClientHttpResponse response) throws IOException {
+                return false;
+            }
+
+            @Override
+            public void handleError(ClientHttpResponse response) throws IOException {
+            }
+        });
+        return restTemplate;
+    }
 
     @InjectMocks
     private DatabaseService database;
@@ -43,16 +65,6 @@ public class VerificationServiceTest {
 
     @Test
     public void verifyInvalidUserFail() throws Exception {
-        restTemplate.setErrorHandler(new ResponseErrorHandler() {
-            @Override
-            public boolean hasError(ClientHttpResponse response) throws IOException {
-                return false;
-            }
-
-            @Override
-            public void handleError(ClientHttpResponse response) throws IOException {
-            }
-        });
         ResponseEntity<String> response = null;
         int userId = 0;
         String userIdString = "0";
@@ -79,16 +91,6 @@ public class VerificationServiceTest {
 
     @Test
     public void verifyValidUserSuccess() throws Exception {
-        restTemplate.setErrorHandler(new ResponseErrorHandler() {
-            @Override
-            public boolean hasError(ClientHttpResponse response) throws IOException {
-                return false;
-            }
-
-            @Override
-            public void handleError(ClientHttpResponse response) throws IOException {
-            }
-        });
         ResponseEntity<String> response = null;
         int userId = 2137;
         String userIdString = "2137";
