@@ -89,7 +89,7 @@ public class VerificationServiceTest {
                     .withQueryParam("registrationToken",
                             WireMock.equalTo(invalidRegistrationToken))
                     .withQueryParam("userId", WireMock.equalTo(userIdString))
-                    .willReturn(WireMock.aResponse().withStatus(403).withBody(responseBody)));
+                    .willReturn(WireMock.aResponse().withStatus(HttpStatus.FORBIDDEN.value()).withBody(responseBody)));
             response = restTemplate.getForEntity(actualRequestUrl, String.class, queryParams);
         }
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode().value());
@@ -121,7 +121,7 @@ public class VerificationServiceTest {
                     .withQueryParam("registrationToken",
                             WireMock.equalTo(validRegistrationToken))
                     .withQueryParam("userId", WireMock.equalTo(userIdString))
-                    .willReturn(WireMock.aResponse().withStatus(200).withBody(responseBody)));
+                    .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value()).withBody(responseBody)));
             response = restTemplate.getForEntity(actualRequestUrl, String.class, queryParams);
         }
         assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
