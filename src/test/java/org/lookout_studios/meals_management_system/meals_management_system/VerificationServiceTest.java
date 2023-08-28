@@ -64,13 +64,19 @@ public class VerificationServiceTest {
     public WireMockRule wireMockRule = new WireMockRule(options().port(8080));
 
     @Test
+    /**
+     * Mocks a scenario when credentials of a user being verified are invalid.
+     * Ensures that such requests return 403 (Forbidden)
+     * 
+     * @throws Exception
+     */
     public void verifyInvalidUserFail() throws Exception {
         ResponseEntity<String> response = null;
         int userId = 0;
         String userIdString = "0";
-        String invalidRegistrationToken = "abc";
-        String requestUrl = "/verify";
-        String fullRequestUrl = "http://localhost:8080/verify";
+        String invalidRegistrationToken = "invalid";
+        String expectedRequestUrl = "/verify?userId=0&registrationToken=invalid";
+        String actualRequestUrl = "http://localhost:8080/verify?userId={userId}&registrationToken={registrationToken}";
         String responseBody = new ResponseBody(HttpStatus.FORBIDDEN).getResponseBody();
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("userId", userIdString);
@@ -79,24 +85,30 @@ public class VerificationServiceTest {
         boolean registered = database.verifyRegistrationToken(userId, invalidRegistrationToken);
         assertFalse(registered);
         if (!registered) {
-            WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(requestUrl))
+            WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(expectedRequestUrl))
                     .withQueryParam("registrationToken",
                             WireMock.equalTo(invalidRegistrationToken))
                     .withQueryParam("userId", WireMock.equalTo(userIdString))
                     .willReturn(WireMock.aResponse().withStatus(403).withBody(responseBody)));
-            response = restTemplate.getForEntity(fullRequestUrl, String.class, queryParams);
+            response = restTemplate.getForEntity(actualRequestUrl, String.class, queryParams);
         }
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode().value());
     }
 
     @Test
+    /**
+     * Mocks a scenario when user's parameters are valid. Ensures that such requests
+     * return 200 (OK)
+     * 
+     * @throws Exception
+     */
     public void verifyValidUserSuccess() throws Exception {
         ResponseEntity<String> response = null;
         int userId = 2137;
         String userIdString = "2137";
         String validRegistrationToken = "valid";
-        String requestUrl = "/verify";
-        String fullRequestUrl = "http://localhost:8080/verify";
+        String expectedRequestUrl = "/verify/?userId=2137&registrationToken=valid";
+        String actualRequestUrl = "http://localhost:8080/verify/?userId={userId}&registrationToken={registrationToken}";
         String responseBody = new ResponseBody(HttpStatus.OK).getResponseBody();
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("userId", userIdString);
@@ -105,12 +117,12 @@ public class VerificationServiceTest {
         boolean registered = database.verifyRegistrationToken(userId, validRegistrationToken);
         assertTrue(registered);
         if (registered) {
-            WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(requestUrl))
+            WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(expectedRequestUrl))
                     .withQueryParam("registrationToken",
                             WireMock.equalTo(validRegistrationToken))
                     .withQueryParam("userId", WireMock.equalTo(userIdString))
                     .willReturn(WireMock.aResponse().withStatus(200).withBody(responseBody)));
-            response = restTemplate.getForEntity(fullRequestUrl, String.class, queryParams);
+            response = restTemplate.getForEntity(actualRequestUrl, String.class, queryParams);
         }
         assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
     }
