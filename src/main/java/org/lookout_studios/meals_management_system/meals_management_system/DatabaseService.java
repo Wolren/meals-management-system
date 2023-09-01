@@ -1,18 +1,17 @@
 package org.lookout_studios.meals_management_system.meals_management_system;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.FileReader;
-
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class establishing connection with database.
@@ -45,7 +44,7 @@ public class DatabaseService {
          */
         ResultSet result = null;
         try {
-            log.info(String.format("Executing query %s", selectQuery));
+            log.debug(String.format("Executing query %s", selectQuery));
             Statement statement = connection.createStatement();
             result = statement.executeQuery(selectQuery);
         } catch (Exception exception) {
@@ -67,7 +66,7 @@ public class DatabaseService {
     public boolean executeOtherQuery(String query, Connection connection) throws Exception {
         boolean result = false;
         try {
-            log.info(String.format("Executing query %s", query));
+            log.debug(String.format("Executing query %s", query));
             Statement statement = connection.createStatement();
             result = statement.execute(query);
         } catch (Exception exception) {
@@ -123,6 +122,7 @@ public class DatabaseService {
                             email),
                     connection);
             if (!result.next()) {
+                connection.close();
                 return false;
             }
         } catch (Exception exception) {
@@ -145,6 +145,49 @@ public class DatabaseService {
                     String.format(
                             "INSERT INTO users (email, password, isVerified, registrationToken) VALUES (\"%s\", %d, false, \"%s\");",
                             user.getEmail(), user.getPasswordHash(), user.getRegistrationToken()),
+                    connection);
+        } catch (Exception exception) {
+            throw exception;
+        }
+        connection.close();
+    }
+
+    public boolean verifyRegistrationToken(int userId, String registrationToken) throws Exception {
+        Connection connection = establishConnection();
+        try {
+            ResultSet result = executeSelectQuery(
+                    String.format(
+                            "SELECT u.registrationToken FROM users u WHERE userId = \"%s\"",
+                            userId),
+                    connection);
+            if (!result.next()) {
+                log.info(String.format("User with id %d does not exist", userId));
+                connection.close();
+                return false;
+            }
+            String foundToken = result.getString("registrationToken");
+            if (!foundToken.equals(registrationToken)) {
+                log.info(String.format(
+                        "Tokens '%s' and '%s' do not match",
+                        foundToken,
+                        registrationToken));
+                connection.close();
+                return false;
+            }
+        } catch (Exception exception) {
+            throw exception;
+        }
+        connection.close();
+        return true;
+    }
+
+    public void markUserAsVerified(int userId) throws Exception {
+        Connection connection = establishConnection();
+        try {
+            executeOtherQuery(
+                    String.format(
+                            "UPDATE users SET isVerified = true WHERE userId = %d",
+                            userId),
                     connection);
         } catch (Exception exception) {
             throw exception;
