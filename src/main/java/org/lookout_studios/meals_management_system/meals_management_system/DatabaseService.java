@@ -1,21 +1,20 @@
 package org.lookout_studios.meals_management_system.meals_management_system;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Optional;
+
 /**
  * Class establishing connection with database.
- * 
+ *
  * @author Hubert Borysowski
  */
 public class DatabaseService {
@@ -31,22 +30,25 @@ public class DatabaseService {
     /**
      * Creates an SQL connection with a database,
      * executes a SELECT query and closes the connection.
-     * 
-     * @param selectQuery mySQL SELECT query
+     *
+     * @param query mySQL SELECT query
      * @return Result of the query
      * @param connection Connection with the database
      *                   established with establishConnection();
      * @throws Exception
      */
-    public ResultSet executeSelectQuery(String selectQuery, Connection connection) throws Exception {
+    public ResultSet executeSelectQuery(String query, Connection connection, Object... parameters) throws Exception {
         /*
          * Create JSONParser object, so you can read configuration data from JSON file.
          */
-        ResultSet result = null;
+        ResultSet result;
         try {
-            log.debug(String.format("Executing query %s", selectQuery));
-            Statement statement = connection.createStatement();
-            result = statement.executeQuery(selectQuery);
+            log.debug(String.format("Executing query %s", query));
+            PreparedStatement statement = connection.prepareStatement(query);
+            for (int i = 0; i < parameters.length; i++) {
+                statement.setObject(i + 1, parameters[i]);
+            }
+            result = statement.executeQuery();
         } catch (Exception exception) {
             log.error(exception.getMessage());
             throw exception;
@@ -55,23 +57,27 @@ public class DatabaseService {
     }
 
     /**
-     * 
+     *
      * @param query      Non-SELECT mySQL query
-     * @param connection A connection object created with establishConnection()
-     *                   method
      * @return A boolean representing database response. See
      *         java.sql.Statement.execute() for further details
      * @throws Exception
      */
-    public boolean executeOtherQuery(String query, Connection connection) throws Exception {
+    public boolean executeOtherQuery(String query, Object... parameters) throws Exception {
         boolean result = false;
-        try {
-            log.debug(String.format("Executing query %s", query));
-            Statement statement = connection.createStatement();
-            result = statement.execute(query);
-        } catch (Exception exception) {
-            log.error(exception.getMessage());
-            throw exception;
+        Optional<Connection> connection = establishConnection();
+        if (connection.isPresent()) {
+            try {
+                log.debug(String.format("Executing query %s", query));
+                PreparedStatement statement = connection.get().prepareStatement(query);
+                for (int i = 0; i < parameters.length; i++) {
+                    statement.setObject(i + 1, parameters[i]);
+                }
+                result = statement.execute();
+            } catch (Exception exception) {
+                log.error(exception.getMessage());
+                throw exception;
+            }
         }
         return result;
     }
@@ -79,11 +85,11 @@ public class DatabaseService {
     /**
      * Reads credentials from a config file and establishes
      * a connection with a database using them.
-     * 
+     *
      * @return A Connection object ready to be used
      */
-    private Connection establishConnection() {
-        Connection accessConnection = null;
+    private Optional<Connection> establishConnection() {
+        Connection accessConnection;
         try {
             JSONParser jsonParser = new JSONParser();
             FileReader jsonFileDataReader = new FileReader(jsonConfigFilePath);
@@ -96,73 +102,48 @@ public class DatabaseService {
                     databaseJdbcUrl,
                     databaseUsername,
                     databasePassword);
-        } catch (FileNotFoundException fileNotFoundError) {
-            System.out.println(fileNotFoundError);
-        } catch (IOException ioError) {
-            System.out.println(ioError);
+            return Optional.of(accessConnection);
         } catch (Exception mysqlError) {
             System.out.println(mysqlError);
+            return Optional.empty();
         }
-        return accessConnection;
     }
 
     /**
      * Checks if a user with a given email is present in the database
-     * 
+     *
      * @param email of a user
      * @return true if an email is found in the database, false if it isn't
      * @throws Exception
      */
     public boolean isUserRegistered(String email) throws Exception {
-        Connection connection = establishConnection();
-        try {
-            ResultSet result = executeSelectQuery(
-                    String.format(
-                            "SELECT u.email FROM users u WHERE u.email = \"%s\";",
-                            email),
-                    connection);
-            if (!result.next()) {
-                connection.close();
-                return false;
-            }
-        } catch (Exception exception) {
-            throw exception;
+        String query = "SELECT u.email FROM users u WHERE u.email = ?";
+        Optional<Connection> connection = establishConnection();
+        if (connection.isPresent()) {
+            ResultSet result = executeSelectQuery(query, connection.get(), email);
+            return result.next();
         }
-        connection.close();
-        return true;
+        return false;
     }
 
     /**
      * Registers new user in the database
-     * 
+     *
      * @param user A user object representing a user to be registered
      * @throws Exception
      */
     public void registerNewUser(User user) throws Exception {
-        Connection connection = establishConnection();
-        try {
-            executeOtherQuery(
-                    String.format(
-                            "INSERT INTO users (email, password, isVerified, registrationToken) VALUES (\"%s\", %d, false, \"%s\");",
-                            user.getEmail(), user.getPasswordHash(), user.getRegistrationToken()),
-                    connection);
-        } catch (Exception exception) {
-            throw exception;
-        }
-        connection.close();
+        String query = "INSERT INTO users (email, password, isVerified, registrationToken) VALUES (?, ?, false, ?)";
+        executeOtherQuery(query, user.getEmail(), user.getPasswordHash(), user.getRegistrationToken());
     }
 
     public boolean verifyRegistrationToken(int userId, String registrationToken) throws Exception {
-        Connection connection = establishConnection();
-        try {
-            ResultSet result = executeSelectQuery(
-                    String.format(
-                            "SELECT u.registrationToken FROM users u WHERE userId = \"%s\"",
-                            userId),
-                    connection);
+        String query = "SELECT u.registrationToken FROM users u WHERE userId = ?";
+        Optional<Connection> connection = establishConnection();
+        if (connection.isPresent()) {
+            ResultSet result = executeSelectQuery(query, connection.get(), userId);
             if (!result.next()) {
                 log.info(String.format("User with id %d does not exist", userId));
-                connection.close();
                 return false;
             }
             String foundToken = result.getString("registrationToken");
@@ -171,27 +152,15 @@ public class DatabaseService {
                         "Tokens '%s' and '%s' do not match",
                         foundToken,
                         registrationToken));
-                connection.close();
                 return false;
             }
-        } catch (Exception exception) {
-            throw exception;
+            result.close();
         }
-        connection.close();
         return true;
     }
 
     public void markUserAsVerified(int userId) throws Exception {
-        Connection connection = establishConnection();
-        try {
-            executeOtherQuery(
-                    String.format(
-                            "UPDATE users SET isVerified = true WHERE userId = %d",
-                            userId),
-                    connection);
-        } catch (Exception exception) {
-            throw exception;
-        }
-        connection.close();
+        String query = "UPDATE users SET isVerified = true WHERE userId = ?";
+        executeOtherQuery(query, userId);
     }
 }

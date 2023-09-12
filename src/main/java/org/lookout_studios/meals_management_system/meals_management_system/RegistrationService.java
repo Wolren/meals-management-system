@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RegistrationService {
-    private String invalidEmailMessage = "Invalid email address";
-    private String invalidPasswordMessage = "Invalid password";
-    private String alreadyRegisteredMessage = "This user already exists";
-    private String validPasswordPattern = ".{8,}";
-    private String validEmailPattern = "^[\\w+-]+(\\.[\\w+-]+)*[\\.]?[a-zA-Z0-9]@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+    private final String invalidEmailMessage = "Invalid email address";
+    private final String invalidPasswordMessage = "Invalid password";
+    private final String alreadyRegisteredMessage = "This user already exists";
+    private final String validPasswordPattern = ".{8,}";
+    private final String validEmailPattern = "^[\\w+-]+(\\.[\\w+-]+)*[.]?[a-zA-Z0-9]@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
     Logger log = LoggerFactory.getLogger(RegistrationService.class);
 
@@ -40,38 +40,34 @@ public class RegistrationService {
                 userEmail));
         if (!emailCheck(userEmail)) {
             log.info(String.format("Email '%s' is invalid", userEmail));
-            return new ResponseEntity<String>(
+            return new ResponseEntity<>(
                     new ResponseBody(HttpStatus.BAD_REQUEST, invalidEmailMessage).getResponseBody(),
                     HttpStatus.BAD_REQUEST);
         }
         if (!passwordCheck(user.getPassword())) {
             log.info(String.format("Password provided by %s is invalid", userEmail));
-            return new ResponseEntity<String>(
+            return new ResponseEntity<>(
                     new ResponseBody(HttpStatus.BAD_REQUEST, invalidPasswordMessage).getResponseBody(),
                     HttpStatus.BAD_REQUEST);
         }
         DatabaseService databaseService = new DatabaseService();
-        try {
+        log.info(String.format(
+                "Checking if %s is already registered",
+                userEmail));
+        boolean isRegistered = databaseService.isUserRegistered(userEmail);
+        if (isRegistered) {
             log.info(String.format(
-                    "Checking if %s is already registered",
+                    "User with email %s is already registered",
                     userEmail));
-            boolean isRegistered = databaseService.isUserRegistered(userEmail);
-            if (isRegistered) {
-                log.info(String.format(
-                        "User with email %s is already registered",
-                        userEmail));
-                return new ResponseEntity<String>(
-                        new ResponseBody(
-                                HttpStatus.BAD_REQUEST,
-                                alreadyRegisteredMessage).getResponseBody(),
-                        HttpStatus.BAD_REQUEST);
-            }
-            log.info(String.format(
-                    "%s is not registered",
-                    userEmail));
-        } catch (Exception exception) {
-            throw exception;
+            return new ResponseEntity<>(
+                    new ResponseBody(
+                            HttpStatus.BAD_REQUEST,
+                            alreadyRegisteredMessage).getResponseBody(),
+                    HttpStatus.BAD_REQUEST);
         }
+        log.info(String.format(
+                "%s is not registered",
+                userEmail));
         log.info(String.format(
                 "Registering new user with email '%s'",
                 userEmail));
@@ -80,7 +76,7 @@ public class RegistrationService {
         log.info(String.format(
                 "User with email %s registered successfully",
                 userEmail));
-        return new ResponseEntity<String>(
+        return new ResponseEntity<>(
                 new ResponseBody(HttpStatus.OK).getResponseBody(), HttpStatus.OK);
     }
 
@@ -98,8 +94,6 @@ public class RegistrationService {
             match = matcher.find();
         } catch (NullPointerException exception) {
             return false;
-        } catch (Exception exception) {
-            throw exception;
         }
         return match;
     }
@@ -118,8 +112,6 @@ public class RegistrationService {
             match = matcher.find();
         } catch (NullPointerException exception) {
             return false;
-        } catch (Exception exception) {
-            throw exception;
         }
         return match;
     }

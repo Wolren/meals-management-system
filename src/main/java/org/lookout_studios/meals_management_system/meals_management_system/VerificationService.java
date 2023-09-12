@@ -37,10 +37,10 @@ public class VerificationService {
     private final String okResponseCode = "200";
     private final String forbiddenResponseCode = "403";
     private final String serverErrorResponseCode = "500";
-    private String verificationUnsuccessfulMessage = """
+    private final String verificationUnsuccessfulMessage = """
             The registration token does not belong to user with this ID
             """;
-    private String verificationSuccessfulMessage = "Verification successful";
+    private final String verificationSuccessfulMessage = "Verification successful";
     Logger log = LoggerFactory.getLogger(VerificationService.class);
 
     @GetMapping(value = "/verify", produces = "application/json")
@@ -64,7 +64,7 @@ public class VerificationService {
                     "Token '%s' does not belong to user with id %d, verification unsuccessful",
                     registrationToken,
                     userId));
-            return new ResponseEntity<String>(
+            return new ResponseEntity<>(
                     new ResponseBody(
                             HttpStatus.FORBIDDEN,
                             verificationUnsuccessfulMessage).getResponseBody(),
@@ -74,7 +74,7 @@ public class VerificationService {
         log.info(String.format(
                 "User with id %d verified successfully",
                 userId));
-        return new ResponseEntity<String>(
+        return new ResponseEntity<>(
                 new ResponseBody(
                         HttpStatus.OK,
                         verificationSuccessfulMessage)
