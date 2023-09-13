@@ -1,6 +1,6 @@
 package org.lookout_studios.meals_management_system.meals_management_system;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.when;
@@ -48,7 +48,7 @@ public class DatabaseServiceTest {
     String userEmail = existingUser.getEmail();
     when(dbConnectionMock.isUserRegistered(userEmail)).thenReturn(true);
     boolean registered = dbConnectionMock.isUserRegistered(userEmail);
-    assertEquals(true, registered);
+    assertTrue(registered);
   }
 
   @Test
@@ -57,6 +57,6 @@ public class DatabaseServiceTest {
     String userEmail = newUser.getEmail();
     when(dbConnectionMock.isUserRegistered(userEmail)).thenReturn(false);
     boolean registered = dbConnectionMock.isUserRegistered(userEmail);
-    assertEquals(false, registered);
+    assertFalse(registered);
   }
 }

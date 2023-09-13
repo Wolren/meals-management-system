@@ -25,6 +25,8 @@ import org.springframework.web.client.RestTemplate;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
+import javax.annotation.Nullable;
+
 public class VerificationServiceTest {
 
     private RestTemplate restTemplate = ignoreHttpErrors();
@@ -40,12 +42,12 @@ public class VerificationServiceTest {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setErrorHandler(new ResponseErrorHandler() {
             @Override
-            public boolean hasError(ClientHttpResponse response) throws IOException {
+            public boolean hasError(@Nullable ClientHttpResponse response) throws IOException {
                 return false;
             }
 
             @Override
-            public void handleError(ClientHttpResponse response) throws IOException {
+            public void handleError(@Nullable ClientHttpResponse response) throws IOException {
             }
         });
         return restTemplate;
@@ -84,14 +86,12 @@ public class VerificationServiceTest {
         Mockito.when(database.verifyRegistrationToken(userId, invalidRegistrationToken)).thenReturn(false);
         boolean registered = database.verifyRegistrationToken(userId, invalidRegistrationToken);
         assertFalse(registered);
-        if (!registered) {
-            WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(expectedRequestUrl))
-                    .withQueryParam("registrationToken",
-                            WireMock.equalTo(invalidRegistrationToken))
-                    .withQueryParam("userId", WireMock.equalTo(userIdString))
-                    .willReturn(WireMock.aResponse().withStatus(HttpStatus.FORBIDDEN.value()).withBody(responseBody)));
-            response = restTemplate.getForEntity(actualRequestUrl, String.class, queryParams);
-        }
+        WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(expectedRequestUrl))
+                .withQueryParam("registrationToken",
+                        WireMock.equalTo(invalidRegistrationToken))
+                .withQueryParam("userId", WireMock.equalTo(userIdString))
+                .willReturn(WireMock.aResponse().withStatus(HttpStatus.FORBIDDEN.value()).withBody(responseBody)));
+        response = restTemplate.getForEntity(actualRequestUrl, String.class, queryParams);
         assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatusCode().value());
     }
 
@@ -103,7 +103,7 @@ public class VerificationServiceTest {
      * @throws Exception
      */
     public void verifyValidUserSuccess() throws Exception {
-        ResponseEntity<String> response = null;
+        ResponseEntity<String> response;
         int userId = 2137;
         String userIdString = "2137";
         String validRegistrationToken = "valid";
@@ -116,14 +116,12 @@ public class VerificationServiceTest {
         Mockito.when(database.verifyRegistrationToken(userId, validRegistrationToken)).thenReturn(true);
         boolean registered = database.verifyRegistrationToken(userId, validRegistrationToken);
         assertTrue(registered);
-        if (registered) {
-            WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(expectedRequestUrl))
-                    .withQueryParam("registrationToken",
-                            WireMock.equalTo(validRegistrationToken))
-                    .withQueryParam("userId", WireMock.equalTo(userIdString))
-                    .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value()).withBody(responseBody)));
-            response = restTemplate.getForEntity(actualRequestUrl, String.class, queryParams);
-        }
+        WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(expectedRequestUrl))
+                .withQueryParam("registrationToken",
+                        WireMock.equalTo(validRegistrationToken))
+                .withQueryParam("userId", WireMock.equalTo(userIdString))
+                .willReturn(WireMock.aResponse().withStatus(HttpStatus.OK.value()).withBody(responseBody)));
+        response = restTemplate.getForEntity(actualRequestUrl, String.class, queryParams);
         assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
     }
 }

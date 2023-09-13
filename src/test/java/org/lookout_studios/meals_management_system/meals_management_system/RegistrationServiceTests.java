@@ -20,6 +20,8 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
 import net.minidev.json.JSONObject;
 
+import javax.annotation.Nullable;
+
 @WireMockTest
 class RegistrationServiceTests {
 
@@ -32,12 +34,12 @@ class RegistrationServiceTests {
         wireMockServer.start();
         restTemplate.setErrorHandler(new ResponseErrorHandler() {
             @Override
-            public boolean hasError(ClientHttpResponse response) throws IOException {
+            public boolean hasError(@Nullable ClientHttpResponse response) throws IOException {
                 return false;
             }
 
             @Override
-            public void handleError(ClientHttpResponse response) throws IOException {
+            public void handleError(@Nullable ClientHttpResponse response) throws IOException {
             }
         });
     }
@@ -52,7 +54,7 @@ class RegistrationServiceTests {
         wireMockServer.resetAll();
     }
 
-    private String requestUrl = "http://localhost:8080/register";
+    private final String requestUrl = "http://localhost:8080/register";
 
     /**
      * Ensures that /register requests with invalid emails generate
